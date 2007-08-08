@@ -3,6 +3,7 @@
 %define xml_version_required 2.6.27
 %define major 1
 %define libname %mklibname xslt %{major}
+%define develname %mklibname xslt -d
 
 %if %mdkversion >= 720 && %mdkversion <= 800
 %define py_ver      2.0
@@ -36,8 +37,8 @@
 
 Summary: Library providing XSLT support
 Name:    libxslt
-Version: 1.1.20
-Release: %mkrel 2
+Version: 1.1.21
+Release: %mkrel 1
 License: MIT
 Group: System/Libraries
 Source: ftp://xmlsoft.org/libxslt/libxslt-%{version}.tar.bz2
@@ -98,16 +99,17 @@ to load and save XML and HTML files. Direct access to XPath and
 the XSLT transformation context are possible to extend the XSLT language
 with XPath functions written in Python.
 
-
-%package -n %{libname}-devel
+%package -n %{develname}
 Summary: Libraries, includes, etc. to develop XML and HTML applications
 Group: Development/C
 Provides: %{_lib}%{name}-devel = %{version}-%{release}
 Provides: %{name}-devel = %{version}-%{release}
+Provides: lib%{name}-devel = %{version}-%{release}
 Requires: %{libname} = %{version}
 Requires: libxml2-devel >= %{xml_version_required}
+Obsoletes: %mklibname xslt 1 -d
 
-%description -n %{libname}-devel
+%description -n %{develname}
 This C library allows to transform XML files into other XML files
 (or HTML, text, ...) using the standard XSLT stylesheet transformation
 mechanism. 
@@ -119,19 +121,19 @@ mechanism.
 
 %build
 %if %mdkversion <= 810
-%{configure}
+%configure
 %else
-%{configure2_5x}
+%configure2_5x
 %endif
 
-%{make}
+%make
 
 %check
-%{__make} check
+make check
 
 %install
 %{__rm} -rf %{buildroot}
-%{makeinstall}
+%makeinstall_std
 
 # remove unpackaged files
 %{__rm} -rf %{buildroot}%{_docdir}/%{name}-%{version} %{buildroot}%{_docdir}/%{name}-python-%{version} \
@@ -164,7 +166,7 @@ mechanism.
 %{_libdir}/python%{py_ver}/site-packages/*.so
 %{_libdir}/python%{py_ver}/site-packages/*.py
 
-%files -n %{libname}-devel
+%files -n %{develname}
 %defattr(-, root, root)
 %doc doc/*.html doc/tutorial doc/html
 %{_mandir}/man3/*
@@ -178,5 +180,3 @@ mechanism.
 %{_bindir}/xslt-config
 %{_libdir}/pkgconfig/*
 %{_datadir}/aclocal/*
-
-
