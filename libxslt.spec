@@ -86,8 +86,6 @@ mechanism.
 
 %build
 %configure2_5x
-%endif
-
 %make
 
 %check
