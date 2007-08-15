@@ -1,56 +1,22 @@
-%define mdkversion             %(perl -pe '/(\\d+)\\.(\\d)\\.?(\\d)?/; $_="$1$2".($3||0)' /etc/mandrake-release)
-
 %define xml_version_required 2.6.27
 %define major 1
 %define libname %mklibname xslt %{major}
 %define develname %mklibname xslt -d
 
-%if %mdkversion >= 720 && %mdkversion <= 800
-%define py_ver      2.0
-%endif
-
-%if %mdkversion == 810
-%define py_ver      2.1
-%endif
-
-%if %mdkversion >= 820 && %mdkversion <= 910
-%define py_ver      2.2
-%endif
-
-%if %mdkversion >= 920
-%define py_ver      2.3
-%endif
-
-%if %mdkversion <= 1000
-%define __libtoolize true
-%endif
-
-%if %mdkversion >= 1020
-%define py_ver      %pyver
-%endif
-
-%if %mdkversion >= 920
-%define pylibxml2   python-libxml2
-%else
-%define pylibxml2   libxml2-python
-%endif
-
 Summary: Library providing XSLT support
 Name:    libxslt
 Version: 1.1.21
-Release: %mkrel 1
+Release: %mkrel 2
 License: MIT
 Group: System/Libraries
 Source: ftp://xmlsoft.org/libxslt/libxslt-%{version}.tar.bz2
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Requires: libxml2 >= %{xml_version_required}
 BuildRequires: libxml2-devel >= %{xml_version_required}
-BuildRequires: python-devel >= %{py_ver}
-BuildRequires: %{pylibxml2} >= %{xml_version_required}
+BuildRequires: python-devel >= %{pyver}
+BuildRequires: python-libxml2 >= %{xml_version_required}
 BuildRequires: libgcrypt-devel
-%if %mdkversion >= 1020
 BuildRequires:        multiarch-utils >= 1.0.3
-%endif
 URL: http://xmlsoft.org/XSLT/
 
 %description
@@ -72,7 +38,6 @@ mechanism.
 %package -n %{libname}
 Summary: Library providing XSLT support
 Group: System/Libraries
-Requires: libxml2 >= %{xml_version_required}
 
 %description  -n %{libname}
 This C library allows to transform XML files into other XML files
@@ -86,8 +51,8 @@ Summary: Python bindings for the libxslt library
 Group: Development/Python
 Obsoletes: %{name}-python
 Requires: %{libname} = %{version}
-Requires: python >= %{py_ver}
-Requires: %{pylibxml2} >= %{xml_version_required}
+Requires: python >= %{pyver}
+Requires: python-libxml2 >= %{xml_version_required}
 
 %description -n python-%{name}
 The libxslt-python package contains a module that permits applications
@@ -120,9 +85,6 @@ mechanism.
 %{__cp} -a python/tests/*.{py,xml,xsl} python/examples
 
 %build
-%if %mdkversion <= 810
-%configure
-%else
 %configure2_5x
 %endif
 
@@ -137,11 +99,9 @@ make check
 
 # remove unpackaged files
 %{__rm} -rf %{buildroot}%{_docdir}/%{name}-%{version} %{buildroot}%{_docdir}/%{name}-python-%{version} \
-  %{buildroot}%{_libdir}/python%{py_ver}/site-packages/*.{la,a}
+  %{buildroot}%{_libdir}/python%{pyver}/site-packages/*.{la,a}
 
-%if %mdkversion >= 1020
 %multiarch_binaries %{buildroot}%{_bindir}/xslt-config
-%endif
 
 %clean
 %{__rm} -rf %{buildroot}
@@ -163,8 +123,8 @@ make check
 %files -n python-%{name}
 %defattr(-, root, root)
 %doc AUTHORS README Copyright FEATURES python/TODO python/examples python/libxsltclass.txt
-%{_libdir}/python%{py_ver}/site-packages/*.so
-%{_libdir}/python%{py_ver}/site-packages/*.py
+%{_libdir}/python%{pyver}/site-packages/*.so
+%{_libdir}/python%{pyver}/site-packages/*.py
 
 %files -n %{develname}
 %defattr(-, root, root)
@@ -174,9 +134,7 @@ make check
 %{_libdir}/*a
 %{_libdir}/*.sh
 %{_includedir}/*
-%if %mdkversion >= 1020
 %multiarch %{multiarch_bindir}/xslt-config
-%endif
 %{_bindir}/xslt-config
 %{_libdir}/pkgconfig/*
 %{_datadir}/aclocal/*
