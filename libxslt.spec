@@ -3,21 +3,21 @@
 %define libname %mklibname xslt %{major}
 %define develname %mklibname xslt -d
 
-Summary: Library providing XSLT support
 Name:    libxslt
-Version: 1.1.21
-Release: %mkrel 2
+Version: 1.1.22
+Release: %mkrel 1
+Summary: Library providing XSLT support
 License: MIT
 Group: System/Libraries
-Source: ftp://xmlsoft.org/libxslt/libxslt-%{version}.tar.bz2
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
+URL: http://xmlsoft.org/XSLT/
+Source0: ftp://xmlsoft.org/libxslt/libxslt-%{version}.tar.gz
 Requires: libxml2 >= %{xml_version_required}
 BuildRequires: libxml2-devel >= %{xml_version_required}
 BuildRequires: python-devel >= %{pyver}
 BuildRequires: python-libxml2 >= %{xml_version_required}
 BuildRequires: libgcrypt-devel
 BuildRequires:        multiarch-utils >= 1.0.3
-URL: http://xmlsoft.org/XSLT/
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 %description
 This C library allows to transform XML files into other XML files
@@ -27,7 +27,7 @@ mechanism.
 %package proc
 Summary: XSLT processor using libxslt
 Group: System/Libraries
-Requires: %{libname} = %{version}
+Requires: %{libname} = %{version}-%{release}
 
 %description proc
 This package provides an XSLT processor based on the libxslt C library. 
@@ -49,8 +49,8 @@ the libxslt-proc package.
 %package -n python-%{name}
 Summary: Python bindings for the libxslt library
 Group: Development/Python
-Obsoletes: %{name}-python
-Requires: %{libname} = %{version}
+Obsoletes: %{name}-python < %{version}-%{release}
+Requires: %{libname} = %{version}-%{release}
 Requires: python >= %{pyver}
 Requires: python-libxml2 >= %{xml_version_required}
 
@@ -70,9 +70,9 @@ Group: Development/C
 Provides: %{_lib}%{name}-devel = %{version}-%{release}
 Provides: %{name}-devel = %{version}-%{release}
 Provides: lib%{name}-devel = %{version}-%{release}
-Requires: %{libname} = %{version}
+Requires: %{libname} = %{version}-%{release}
 Requires: libxml2-devel >= %{xml_version_required}
-Obsoletes: %mklibname xslt 1 -d
+Obsoletes: %{mklibname xslt 1 -d} < %{version}-%{release}
 
 %description -n %{develname}
 This C library allows to transform XML files into other XML files
@@ -119,8 +119,9 @@ make check
 %{_libdir}/lib*.so.*
 
 %files -n python-%{name}
-%defattr(-, root, root)
+%defattr(0644,root, root,0755)
 %doc AUTHORS README Copyright FEATURES python/TODO python/examples python/libxsltclass.txt
+%defattr(-, root, root)
 %{_libdir}/python%{pyver}/site-packages/*.so
 %{_libdir}/python%{pyver}/site-packages/*.py
 
