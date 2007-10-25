@@ -5,12 +5,13 @@
 
 Name:    libxslt
 Version: 1.1.22
-Release: %mkrel 1
+Release: %mkrel 2
 Summary: Library providing XSLT support
 License: MIT
 Group: System/Libraries
 URL: http://xmlsoft.org/XSLT/
 Source0: ftp://xmlsoft.org/libxslt/libxslt-%{version}.tar.gz
+Patch0: libxslt-python-applyStylesheet-params-x86_64.patch
 Requires: libxml2 >= %{xml_version_required}
 BuildRequires: libxml2-devel >= %{xml_version_required}
 BuildRequires: python-devel >= %{pyver}
@@ -81,6 +82,7 @@ mechanism.
 
 %prep
 %setup -q
+%patch0 -p1 -b .x86_64
 %{__mkdir_p} python/examples
 %{__cp} -a python/tests/*.{py,xml,xsl} python/examples
 
