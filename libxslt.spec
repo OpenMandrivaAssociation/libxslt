@@ -18,7 +18,6 @@ BuildRequires: python-devel >= %{pyver}
 BuildRequires: python-libxml2 >= %{xml_version_required}
 BuildRequires: libgcrypt-devel
 BuildRequires:        multiarch-utils >= 1.0.3
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 
 %description
 This C library allows to transform XML files into other XML files
