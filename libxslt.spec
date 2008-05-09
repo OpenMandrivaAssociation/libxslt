@@ -5,7 +5,7 @@
 
 Name:    libxslt
 Version: 1.1.23
-Release: %mkrel 1
+Release: %mkrel 2
 Summary: Library providing XSLT support
 License: MIT
 Group: System/Libraries
@@ -67,9 +67,7 @@ with XPath functions written in Python.
 %package -n %{develname}
 Summary: Libraries, includes, etc. to develop XML and HTML applications
 Group: Development/C
-Provides: %{_lib}%{name}-devel = %{version}-%{release}
 Provides: %{name}-devel = %{version}-%{release}
-Provides: lib%{name}-devel = %{version}-%{release}
 Requires: %{libname} = %{version}-%{release}
 Requires: libxml2-devel >= %{xml_version_required}
 Obsoletes: %{mklibname xslt 1 -d} < %{version}-%{release}
