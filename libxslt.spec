@@ -6,12 +6,14 @@
 
 Name:    libxslt
 Version: 1.1.24
-Release: %mkrel 2
+Release: %mkrel 3
 Summary: Library providing XSLT support
 License: MIT
 Group: System/Libraries
 URL: http://xmlsoft.org/XSLT/
 Source0: ftp://xmlsoft.org/libxslt/libxslt-%{version}.tar.gz
+# (fc) 1.1.24-3mdv fix CVE-2008-2935 (SVN)
+Patch0: libxslt-svn-CVE-2008-2935.patch
 Requires: libxml2 >= %{xml_version_required}
 BuildRequires: libxml2-devel >= %{xml_version_required}
 BuildRequires: python-devel >= %{pyver}
@@ -80,6 +82,8 @@ mechanism.
 
 %prep
 %setup -q
+%patch0 -p1 -b .CVE-2008-2935
+
 %{__mkdir_p} python/examples
 %{__cp} -a python/tests/*.{py,xml,xsl} python/examples
 
