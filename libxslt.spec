@@ -2,10 +2,11 @@
 %define major 1
 %define libname %mklibname xslt %{major}
 %define develname %mklibname xslt -d
+%define _disable_ld_no_undefined 1
 
 Name:    libxslt
 Version: 1.1.24
-Release: %mkrel 6
+Release: %mkrel 7
 Summary: Library providing XSLT support
 License: MIT
 Group: System/Libraries
