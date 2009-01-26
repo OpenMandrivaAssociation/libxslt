@@ -124,7 +124,7 @@ make check
 %files -n %{libname}
 %defattr(-, root, root)
 %doc AUTHORS NEWS README Copyright FEATURES TODO
-%{_libdir}/lib*.so.%{major}*
+%{_libdir}/lib*.so.*
 
 %files -n python-%{name}
 %defattr(0644,root, root,0755)
