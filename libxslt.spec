@@ -2,11 +2,10 @@
 %define major 1
 %define libname %mklibname xslt %{major}
 %define develname %mklibname xslt -d
-%define _disable_ld_no_undefined 1
 
 Name:    libxslt
 Version: 1.1.24
-Release: %mkrel 5
+Release: %mkrel 6
 Summary: Library providing XSLT support
 License: MIT
 Group: System/Libraries
@@ -14,6 +13,7 @@ URL: http://xmlsoft.org/XSLT/
 Source0: ftp://xmlsoft.org/libxslt/libxslt-%{version}.tar.gz
 # (fc) 1.1.24-3mdv fix CVE-2008-2935 (SVN)
 Patch0: libxslt-svn-CVE-2008-2935.patch
+Patch1: libxslt-1.1.24-linkage.patch
 Requires: libxml2 >= %{xml_version_required}
 BuildRequires: libxml2-devel >= %{xml_version_required}
 BuildRequires: python-devel >= %{pyver}
@@ -83,6 +83,7 @@ mechanism.
 %prep
 %setup -q
 %patch0 -p1 -b .CVE-2008-2935
+%patch1 -p0 -b .linkage
 
 %{__mkdir_p} python/examples
 %{__cp} -a python/tests/*.{py,xml,xsl} python/examples
@@ -100,7 +101,7 @@ make check
 
 # remove unpackaged files
 %{__rm} -rf %{buildroot}%{_docdir}/%{name}-%{version} %{buildroot}%{_docdir}/%{name}-python-%{version} \
-  %{buildroot}%{_libdir}/python%{pyver}/site-packages/*.{la,a}
+  %{buildroot}%{py_platsitedir}/*.{la,a}
 
 %multiarch_binaries %{buildroot}%{_bindir}/xslt-config
 
@@ -123,14 +124,14 @@ make check
 %files -n %{libname}
 %defattr(-, root, root)
 %doc AUTHORS NEWS README Copyright FEATURES TODO
-%{_libdir}/lib*.so.*
+%{_libdir}/lib*.so.%{major}*
 
 %files -n python-%{name}
 %defattr(0644,root, root,0755)
 %doc AUTHORS README Copyright FEATURES python/TODO python/examples python/libxsltclass.txt
 %defattr(-, root, root)
-%{_libdir}/python%{pyver}/site-packages/*.so
-%{_libdir}/python%{pyver}/site-packages/*.py
+%{py_platsitedir}/*.so
+%{py_platsitedir}/*.py
 
 %files -n %{develname}
 %defattr(-, root, root)
