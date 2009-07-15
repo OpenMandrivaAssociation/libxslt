@@ -6,7 +6,7 @@
 
 Name:    libxslt
 Version: 1.1.24
-Release: %mkrel 7
+Release: %mkrel 8
 Summary: Library providing XSLT support
 License: MIT
 Group: System/Libraries
@@ -20,7 +20,7 @@ BuildRequires: libxml2-devel >= %{xml_version_required}
 BuildRequires: python-devel >= %{pyver}
 BuildRequires: python-libxml2 >= %{xml_version_required}
 BuildRequires: libgcrypt-devel
-BuildRequires:        multiarch-utils >= 1.0.3
+BuildRequires: multiarch-utils >= 1.0.3
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 %description
@@ -28,12 +28,13 @@ This C library allows to transform XML files into other XML files
 (or HTML, text, ...) using the standard XSLT stylesheet transformation
 mechanism.
 
-%package proc
+%package -n xsltproc
 Summary: XSLT processor using libxslt
 Group: System/Libraries
-Requires: %{libname} = %{version}-%{release}
+Obsoletes: libxslt-proc < %{version}-8
+Provides: libxslt-proc = %{version}-%{release}
 
-%description proc
+%description -n xsltproc
 This package provides an XSLT processor based on the libxslt C library. 
 It allows to transform XML files into other XML files
 (or HTML, text, ...) using the standard XSLT stylesheet transformation
@@ -93,9 +94,6 @@ mechanism.
 %configure2_5x
 %make
 
-%check
-make check
-
 %install
 %{__rm} -rf %{buildroot}
 %makeinstall_std
@@ -117,7 +115,7 @@ make check
 %postun -n %{libname} -p /sbin/ldconfig
 %endif
 
-%files proc
+%files -n xsltproc
 %defattr(-, root, root)
 %{_bindir}/xsltproc
 %{_mandir}/man1/*
