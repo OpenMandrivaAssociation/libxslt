@@ -5,16 +5,15 @@
 %define _disable_ld_no_undefined 1
 
 Name:    libxslt
-Version: 1.1.24
-Release: %mkrel 8
+Version: 1.1.25
+Release: %mkrel 1
 Summary: Library providing XSLT support
 License: MIT
 Group: System/Libraries
 URL: http://xmlsoft.org/XSLT/
 Source0: ftp://xmlsoft.org/libxslt/libxslt-%{version}.tar.gz
-# (fc) 1.1.24-3mdv fix CVE-2008-2935 (SVN)
-Patch0: libxslt-svn-CVE-2008-2935.patch
-Patch1: libxslt-1.1.24-linkage.patch
+# fix python linking
+Patch1: libxslt-1.1.25-fix-python-linking.patch
 Requires: libxml2 >= %{xml_version_required}
 BuildRequires: libxml2-devel >= %{xml_version_required}
 BuildRequires: python-devel >= %{pyver}
@@ -84,11 +83,13 @@ mechanism.
 
 %prep
 %setup -q
-%patch0 -p1 -b .CVE-2008-2935
-%patch1 -p0 -b .linkage
+%patch1 -p1 -b .fix-python-linking
 
 %{__mkdir_p} python/examples
 %{__cp} -a python/tests/*.{py,xml,xsl} python/examples
+
+#needed by patch1 
+autoreconf
 
 %build
 %configure2_5x
