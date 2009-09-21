@@ -6,12 +6,13 @@
 
 Name:    libxslt
 Version: 1.1.25
-Release: %mkrel 2
+Release: %mkrel 3
 Summary: Library providing XSLT support
 License: MIT
 Group: System/Libraries
 URL: http://xmlsoft.org/XSLT/
 Source0: ftp://xmlsoft.org/libxslt/libxslt-%{version}.tar.gz
+Patch0: libxslt-1.1.25-fix-python-lxml.patch
 # fix python linking
 Patch1: libxslt-1.1.25-fix-python-linking.patch
 Patch2: libxslt-1.1.25-revert-thread-changes.diff
@@ -84,6 +85,7 @@ mechanism.
 
 %prep
 %setup -q
+%patch0 -p1 -b .fix-python-lxml
 %patch1 -p1 -b .fix-python-linking
 %patch2 -p1 -b .threads
 
