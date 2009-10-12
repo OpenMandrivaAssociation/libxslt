@@ -2,20 +2,17 @@
 %define major 1
 %define libname %mklibname xslt %{major}
 %define develname %mklibname xslt -d
-%define _disable_ld_no_undefined 1
 
 Name:    libxslt
-Version: 1.1.25
-Release: %mkrel 3
+Version: 1.1.26
+Release: %mkrel 1
 Summary: Library providing XSLT support
 License: MIT
 Group: System/Libraries
 URL: http://xmlsoft.org/XSLT/
 Source0: ftp://xmlsoft.org/libxslt/libxslt-%{version}.tar.gz
-Patch0: libxslt-1.1.25-fix-python-lxml.patch
 # fix python linking
 Patch1: libxslt-1.1.25-fix-python-linking.patch
-Patch2: libxslt-1.1.25-revert-thread-changes.diff
 Requires: libxml2 >= %{xml_version_required}
 BuildRequires: libxml2-devel >= %{xml_version_required}
 BuildRequires: python-devel >= %{pyver}
@@ -85,9 +82,7 @@ mechanism.
 
 %prep
 %setup -q
-%patch0 -p1 -b .fix-python-lxml
 %patch1 -p1 -b .fix-python-linking
-%patch2 -p1 -b .threads
 
 %{__mkdir_p} python/examples
 %{__cp} -a python/tests/*.{py,xml,xsl} python/examples
