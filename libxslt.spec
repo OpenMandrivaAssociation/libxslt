@@ -5,7 +5,7 @@
 
 Name:    libxslt
 Version: 1.1.26
-Release: %mkrel 1
+Release: %mkrel 2
 Summary: Library providing XSLT support
 License: MIT
 Group: System/Libraries
@@ -88,7 +88,7 @@ mechanism.
 %{__cp} -a python/tests/*.{py,xml,xsl} python/examples
 
 #needed by patch1 
-autoreconf
+autoreconf -fi
 
 %build
 %configure2_5x
