@@ -5,7 +5,7 @@
 
 Name:    libxslt
 Version: 1.1.26
-Release: %mkrel 3
+Release: %mkrel 4
 Summary: Library providing XSLT support
 License: MIT
 Group: System/Libraries
