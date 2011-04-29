@@ -140,7 +140,7 @@ autoreconf -fi
 %{_libdir}/*a
 %{_libdir}/*.sh
 %{_includedir}/*
-%multiarch %{multiarch_bindir}/xslt-config
+%{multiarch_bindir}/xslt-config
 %{_bindir}/xslt-config
 %{_libdir}/pkgconfig/*
 %{_datadir}/aclocal/*
