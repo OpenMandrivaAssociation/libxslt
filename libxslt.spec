@@ -15,7 +15,7 @@ Source0: ftp://xmlsoft.org/libxslt/libxslt-%{version}.tar.gz
 Patch1: libxslt-1.1.25-fix-python-linking.patch
 Requires: libxml2 >= %{xml_version_required}
 BuildRequires: libxml2-devel >= %{xml_version_required}
-BuildRequires: python-devel >= %{pyver}
+BuildRequires: python-devel >= %{py_ver}
 BuildRequires: python-libxml2 >= %{xml_version_required}
 BuildRequires: libgcrypt-devel
 BuildRequires: autoconf automake libtool
