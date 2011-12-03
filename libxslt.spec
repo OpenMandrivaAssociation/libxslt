@@ -5,7 +5,7 @@
 
 Name:    libxslt
 Version: 1.1.26
-Release: %mkrel 4
+Release: 5
 Summary: Library providing XSLT support
 License: MIT
 Group: System/Libraries
@@ -18,8 +18,7 @@ BuildRequires: libxml2-devel >= %{xml_version_required}
 BuildRequires: python-devel >= %{pyver}
 BuildRequires: python-libxml2 >= %{xml_version_required}
 BuildRequires: libgcrypt-devel
-BuildRequires: multiarch-utils >= 1.0.3
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
+BuildRequires: autoconf automake libtool
 
 %description
 This C library allows to transform XML files into other XML files
@@ -53,7 +52,7 @@ the libxslt-proc package.
 Summary: Python bindings for the libxslt library
 Group: Development/Python
 Obsoletes: %{name}-python < %{version}-%{release}
-Requires: %{libname} = %{version}-%{release}
+Requires: %{libname} >= %{version}-%{release}
 Requires: python >= %{pyver}
 Requires: python-libxml2 >= %{xml_version_required}
 
@@ -96,6 +95,7 @@ autoreconf -fi
 
 %install
 %{__rm} -rf %{buildroot}
+
 %makeinstall_std
 
 # remove unpackaged files
@@ -104,40 +104,27 @@ autoreconf -fi
 
 %multiarch_binaries %{buildroot}%{_bindir}/xslt-config
 
-%clean
-%{__rm} -rf %{buildroot}
-
-%if %mdkversion < 200900
-%post -n %{libname} -p /sbin/ldconfig 
-%endif
-
-%if %mdkversion < 200900
-%postun -n %{libname} -p /sbin/ldconfig
-%endif
+# cleanup
+rm -f %{buildroot}%{_libdir}/*.*a
 
 %files -n xsltproc
-%defattr(-, root, root)
 %{_bindir}/xsltproc
 %{_mandir}/man1/*
 
 %files -n %{libname}
-%defattr(-, root, root)
 %doc AUTHORS NEWS README Copyright FEATURES TODO
 %{_libdir}/lib*.so.*
 
 %files -n python-%{name}
-%defattr(0644,root, root,0755)
 %doc AUTHORS README Copyright FEATURES python/TODO python/examples python/libxsltclass.txt
 %defattr(-, root, root)
 %{py_platsitedir}/*.so
 %{py_platsitedir}/*.py
 
 %files -n %{develname}
-%defattr(-, root, root)
 %doc doc/*.html doc/tutorial doc/html
 %{_mandir}/man3/*
 %{_libdir}/lib*.so
-%{_libdir}/*a
 %{_libdir}/*.sh
 %{_includedir}/*
 %{multiarch_bindir}/xslt-config
