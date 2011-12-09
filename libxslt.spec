@@ -5,7 +5,7 @@
 
 Name:    libxslt
 Version: 1.1.26
-Release: 5
+Release: 6
 Summary: Library providing XSLT support
 License: MIT
 Group: System/Libraries
@@ -53,7 +53,7 @@ Summary: Python bindings for the libxslt library
 Group: Development/Python
 Obsoletes: %{name}-python < %{version}-%{release}
 Requires: %{libname} >= %{version}-%{release}
-Requires: python >= %{pyver}
+Requires: python >= %{py_ver}
 Requires: python-libxml2 >= %{xml_version_required}
 
 %description -n python-%{name}
