@@ -1,11 +1,12 @@
-%define xml_version_required 2.6.27
 %define major 1
+%define exslt_major 0
 %define libname %mklibname xslt %{major}
+%define libename %mklibname exslt %{exslt_major}
 %define develname %mklibname xslt -d
 
 Name:    libxslt
 Version: 1.1.26
-Release: 6
+Release: 7
 Summary: Library providing XSLT support
 License: MIT
 Group: System/Libraries
@@ -13,12 +14,12 @@ URL: http://xmlsoft.org/XSLT/
 Source0: ftp://xmlsoft.org/libxslt/libxslt-%{version}.tar.gz
 # fix python linking
 Patch1: libxslt-1.1.25-fix-python-linking.patch
-Requires: libxml2 >= %{xml_version_required}
-BuildRequires: libxml2-devel >= %{xml_version_required}
+
+BuildRequires: libxml2-devel
 BuildRequires: python-devel >= %{py_ver}
-BuildRequires: python-libxml2 >= %{xml_version_required}
+BuildRequires: python-libxml2
 BuildRequires: libgcrypt-devel
-BuildRequires: autoconf automake libtool
+BuildRequires: libtool
 
 %description
 This C library allows to transform XML files into other XML files
@@ -48,13 +49,20 @@ mechanism.
 A xslt processor based on this library, named xsltproc, is provided by 
 the libxslt-proc package.
 
+%package -n %{libename}
+Summary: Library providing XSLT support
+Group: System/Libraries
+Conflicts: %{_lib}xslt1 < 1.1.26-7
+
+%description  -n %{libename}
+This package contains the exslt shared library.
+
 %package -n python-%{name}
 Summary: Python bindings for the libxslt library
 Group: Development/Python
-Obsoletes: %{name}-python < %{version}-%{release}
-Requires: %{libname} >= %{version}-%{release}
 Requires: python >= %{py_ver}
-Requires: python-libxml2 >= %{xml_version_required}
+Requires: python-libxml2
+Obsoletes: %{name}-python < %{version}-%{release}
 
 %description -n python-%{name}
 The libxslt-python package contains a module that permits applications
@@ -71,7 +79,7 @@ Summary: Libraries, includes, etc. to develop XML and HTML applications
 Group: Development/C
 Provides: %{name}-devel = %{version}-%{release}
 Requires: %{libname} = %{version}-%{release}
-Requires: libxml2-devel >= %{xml_version_required}
+Requires: %{libename} = %{version}-%{release}
 Obsoletes: %{mklibname xslt 1 -d} < %{version}-%{release}
 
 %description -n %{develname}
@@ -83,24 +91,25 @@ mechanism.
 %setup -q
 %patch1 -p1 -b .fix-python-linking
 
-%{__mkdir_p} python/examples
-%{__cp} -a python/tests/*.{py,xml,xsl} python/examples
+mkdir -p python/examples
+cp -a python/tests/*.{py,xml,xsl} python/examples
 
 #needed by patch1 
 autoreconf -fi
 
 %build
-%configure2_5x
+%configure2_5x \
+	--disable-static
 %make
 
 %install
-%{__rm} -rf %{buildroot}
-
+rm -rf %{buildroot}
 %makeinstall_std
 
 # remove unpackaged files
-%{__rm} -rf %{buildroot}%{_docdir}/%{name}-%{version} %{buildroot}%{_docdir}/%{name}-python-%{version} \
-  %{buildroot}%{py_platsitedir}/*.{la,a}
+rm -rf %{buildroot}%{_docdir}/%{name}-%{version} \
+	%{buildroot}%{_docdir}/%{name}-python-%{version} \
+	%{buildroot}%{py_platsitedir}/*.{la,a}
 
 %multiarch_binaries %{buildroot}%{_bindir}/xslt-config
 
@@ -108,12 +117,15 @@ autoreconf -fi
 rm -f %{buildroot}%{_libdir}/*.*a
 
 %files -n xsltproc
+%doc AUTHORS NEWS README Copyright FEATURES TODO
 %{_bindir}/xsltproc
 %{_mandir}/man1/*
 
 %files -n %{libname}
-%doc AUTHORS NEWS README Copyright FEATURES TODO
-%{_libdir}/lib*.so.*
+%{_libdir}/libxslt.so.%{major}*
+
+%files -n %{libename}
+%{_libdir}/libexslt.so.%{exslt_major}*
 
 %files -n python-%{name}
 %doc AUTHORS README Copyright FEATURES python/TODO python/examples python/libxsltclass.txt
