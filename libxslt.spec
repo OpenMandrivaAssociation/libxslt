@@ -6,7 +6,7 @@
 
 Name:    libxslt
 Version: 1.1.26
-Release: 7
+Release: 8
 Summary: Library providing XSLT support
 License: MIT
 Group: System/Libraries
@@ -14,7 +14,7 @@ URL: http://xmlsoft.org/XSLT/
 Source0: ftp://xmlsoft.org/libxslt/libxslt-%{version}.tar.gz
 # fix python linking
 Patch1: libxslt-1.1.25-fix-python-linking.patch
-
+Patch2: libxslt-1.1.26-CVE-2011-3970.diff
 BuildRequires: libxml2-devel
 BuildRequires: python-devel >= %{py_ver}
 BuildRequires: python-libxml2
@@ -90,6 +90,7 @@ mechanism.
 %prep
 %setup -q
 %patch1 -p1 -b .fix-python-linking
+%patch2 -p0 -b .CVE-2011-3970
 
 mkdir -p python/examples
 cp -a python/tests/*.{py,xml,xsl} python/examples
