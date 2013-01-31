@@ -4,19 +4,19 @@
 %define libename %mklibname exslt %{exslt_major}
 %define develname %mklibname xslt -d
 
-Name: libxslt
-Version: 1.1.27
-Release: 1
-Summary: Library providing XSLT support
-License: MIT
-Group: System/Libraries
-URL: http://xmlsoft.org/XSLT/
-Source0: ftp://xmlsoft.org/libxslt/libxslt-%{version}.tar.gz
-BuildRequires: libxml2-devel
-BuildRequires: python-devel >= %{py_ver}
-BuildRequires: python-libxml2
-BuildRequires: libgcrypt-devel
-BuildRequires: libtool
+Name:		libxslt
+Version:	1.1.28
+Release:	1
+Summary:	Library providing XSLT support
+License:	MIT
+Group:		System/Libraries
+URL:		http://xmlsoft.org/XSLT/
+Source0:	ftp://xmlsoft.org/libxslt/libxslt-%{version}.tar.gz
+BuildRequires:	libxml2-devel
+BuildRequires:	python-devel >= %{py_ver}
+BuildRequires:	python-libxml2
+BuildRequires:	libgcrypt-devel
+BuildRequires:	libtool
 
 %description
 This C library allows to transform XML files into other XML files
@@ -24,10 +24,10 @@ This C library allows to transform XML files into other XML files
 mechanism.
 
 %package -n xsltproc
-Summary: XSLT processor using libxslt
-Group: System/Libraries
-Obsoletes: libxslt-proc < %{version}-8
-Provides: libxslt-proc = %{version}-%{release}
+Summary:	XSLT processor using libxslt
+Group:		System/Libraries
+Obsoletes:	libxslt-proc < %{version}-8
+Provides:	libxslt-proc = %{version}-%{release}
 
 %description -n xsltproc
 This package provides an XSLT processor based on the libxslt C library. 
@@ -36,8 +36,8 @@ It allows to transform XML files into other XML files
 mechanism. 
 
 %package -n %{libname}
-Summary: Library providing XSLT support
-Group: System/Libraries
+Summary:	Library providing XSLT support
+Group:		System/Libraries
 
 %description  -n %{libname}
 This C library allows to transform XML files into other XML files
@@ -47,19 +47,19 @@ A xslt processor based on this library, named xsltproc, is provided by
 the libxslt-proc package.
 
 %package -n %{libename}
-Summary: Library providing XSLT support
-Group: System/Libraries
-Conflicts: %{_lib}xslt1 < 1.1.26-7
+Summary:	Library providing XSLT support
+Group:		System/Libraries
+Conflicts:	%{_lib}xslt1 < 1.1.26-7
 
 %description  -n %{libename}
 This package contains the exslt shared library.
 
 %package -n python-%{name}
-Summary: Python bindings for the libxslt library
-Group: Development/Python
-Requires: python >= %{py_ver}
-Requires: python-libxml2
-Obsoletes: %{name}-python < %{version}-%{release}
+Summary:	Python bindings for the libxslt library
+Group:		Development/Python
+Requires:	python >= %{py_ver}
+Requires:	python-libxml2
+Obsoletes:	%{name}-python < %{version}-%{release}
 
 %description -n python-%{name}
 The libxslt-python package contains a module that permits applications
@@ -72,12 +72,12 @@ the XSLT transformation context are possible to extend the XSLT language
 with XPath functions written in Python.
 
 %package -n %{develname}
-Summary: Libraries, includes, etc. to develop XML and HTML applications
-Group: Development/C
-Provides: %{name}-devel = %{version}-%{release}
-Requires: %{libname} = %{version}-%{release}
-Requires: %{libename} = %{version}-%{release}
-Obsoletes: %{mklibname xslt 1 -d} < %{version}-%{release}
+Summary:	Libraries, includes, etc. to develop XML and HTML applications
+Group:		Development/C
+Provides:	%{name}-devel = %{version}-%{release}
+Requires:	%{libname} = %{version}-%{release}
+Requires:	%{libename} = %{version}-%{release}
+Obsoletes:	%{mklibname xslt 1 -d} < %{version}-%{release}
 
 %description -n %{develname}
 This C library allows to transform XML files into other XML files
@@ -89,9 +89,6 @@ mechanism.
 
 mkdir -p python/examples
 cp -a python/tests/*.{py,xml,xsl} python/examples
-
-#needed by patch1 
-autoreconf -fi
 
 %build
 %configure2_5x \
