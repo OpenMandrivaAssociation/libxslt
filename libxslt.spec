@@ -2,21 +2,21 @@
 %define exslt_major 0
 %define libname %mklibname xslt %{major}
 %define libename %mklibname exslt %{exslt_major}
-%define develname %mklibname xslt -d
+%define devname %mklibname xslt -d
 
+Summary:	Library providing XSLT support
 Name:		libxslt
 Version:	1.1.28
-Release:	1
-Summary:	Library providing XSLT support
+Release:	2
 License:	MIT
 Group:		System/Libraries
-URL:		http://xmlsoft.org/XSLT/
+Url:		http://xmlsoft.org/XSLT/
 Source0:	ftp://xmlsoft.org/libxslt/libxslt-%{version}.tar.gz
-BuildRequires:	libxml2-devel
-BuildRequires:	python-devel >= %{py_ver}
-BuildRequires:	python-libxml2
-BuildRequires:	libgcrypt-devel
 BuildRequires:	libtool
+BuildRequires:	python-libxml2
+BuildRequires:	pkgconfig(libgcrypt)
+BuildRequires:	pkgconfig(libxml-2.0)
+BuildRequires:	pkgconfig(python) >= %{py_ver}
 
 %description
 This C library allows to transform XML files into other XML files
@@ -26,8 +26,6 @@ mechanism.
 %package -n xsltproc
 Summary:	XSLT processor using libxslt
 Group:		System/Libraries
-Obsoletes:	libxslt-proc < %{version}-8
-Provides:	libxslt-proc = %{version}-%{release}
 
 %description -n xsltproc
 This package provides an XSLT processor based on the libxslt C library. 
@@ -59,7 +57,6 @@ Summary:	Python bindings for the libxslt library
 Group:		Development/Python
 Requires:	python >= %{py_ver}
 Requires:	python-libxml2
-Obsoletes:	%{name}-python < %{version}-%{release}
 
 %description -n python-%{name}
 The libxslt-python package contains a module that permits applications
@@ -71,15 +68,14 @@ to load and save XML and HTML files. Direct access to XPath and
 the XSLT transformation context are possible to extend the XSLT language
 with XPath functions written in Python.
 
-%package -n %{develname}
+%package -n %{devname}
 Summary:	Libraries, includes, etc. to develop XML and HTML applications
 Group:		Development/C
 Provides:	%{name}-devel = %{version}-%{release}
 Requires:	%{libname} = %{version}-%{release}
 Requires:	%{libename} = %{version}-%{release}
-Obsoletes:	%{mklibname xslt 1 -d} < %{version}-%{release}
 
-%description -n %{develname}
+%description -n %{devname}
 This C library allows to transform XML files into other XML files
 (or HTML, text, ...) using the standard XSLT stylesheet transformation
 mechanism. 
@@ -96,18 +92,13 @@ cp -a python/tests/*.{py,xml,xsl} python/examples
 %make
 
 %install
-rm -rf %{buildroot}
 %makeinstall_std
 
 # remove unpackaged files
 rm -rf %{buildroot}%{_docdir}/%{name}-%{version} \
-	%{buildroot}%{_docdir}/%{name}-python-%{version} \
-	%{buildroot}%{py_platsitedir}/*.{la,a}
+	%{buildroot}%{_docdir}/%{name}-python-%{version}
 
 %multiarch_binaries %{buildroot}%{_bindir}/xslt-config
-
-# cleanup
-rm -f %{buildroot}%{_libdir}/*.*a
 
 %files -n xsltproc
 %doc AUTHORS NEWS README Copyright FEATURES TODO
@@ -122,17 +113,17 @@ rm -f %{buildroot}%{_libdir}/*.*a
 
 %files -n python-%{name}
 %doc AUTHORS README Copyright FEATURES python/TODO python/examples python/libxsltclass.txt
-%defattr(-, root, root)
 %{py_platsitedir}/*.so
 %{py_platsitedir}/*.py
 
-%files -n %{develname}
+%files -n %{devname}
 %doc doc/*.html doc/tutorial doc/html
-%{_mandir}/man3/*
 %{_libdir}/lib*.so
 %{_libdir}/*.sh
+%{_libdir}/pkgconfig/*
 %{_includedir}/*
 %{multiarch_bindir}/xslt-config
 %{_bindir}/xslt-config
-%{_libdir}/pkgconfig/*
 %{_datadir}/aclocal/*
+%{_mandir}/man3/*
+
