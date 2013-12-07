@@ -7,7 +7,7 @@
 Summary:	Library providing XSLT support
 Name:		libxslt
 Version:	1.1.28
-Release:	3
+Release:	4
 License:	MIT
 Group:		System/Libraries
 Url:		http://xmlsoft.org/XSLT/
