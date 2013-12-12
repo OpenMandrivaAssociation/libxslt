@@ -1,64 +1,55 @@
-%define major 1
-%define exslt_major 0
-%define libname %mklibname xslt %{major}
-%define libename %mklibname exslt %{exslt_major}
-%define devname %mklibname xslt -d
+%define old_libxslt		%mklibname xslt 1
+%define old_libexslt		%mklibname exslt 0
+%define old_libxslt_devel	%mklibname xslt -d
+%define old_libexslt_devel	%mklibname exslt -d
 
-Summary:	Library providing XSLT support
-Name:		libxslt
-Version:	1.1.28
-Release:	6
-License:	MIT
-Group:		System/Libraries
-Url:		http://xmlsoft.org/XSLT/
-Source0:	ftp://xmlsoft.org/libxslt/libxslt-%{version}.tar.gz
-BuildRequires:	libtool
-BuildRequires:	python-libxml2
-BuildRequires:	pkgconfig(libgcrypt)
-BuildRequires:	pkgconfig(libxml-2.0)
-BuildRequires:	pkgconfig(python) >= %{py_ver}
+Summary: Library providing the Gnome XSLT engine
+Name: libxslt
+Version: 1.1.28
+Release: 5%{?dist}%{?extra_release}
+License: MIT
+
+Source: ftp://xmlsoft.org/XSLT/libxslt-%{version}.tar.gz
+URL: http://xmlsoft.org/XSLT/
+BuildRequires: libxml2-devel >= 2.6.27
+BuildRequires: python-devel
+BuildRequires: libxml2-python
+BuildRequires: libgcrypt-devel
+BuildRequires: automake autoconf
+
+# Fedora specific patches
+Patch0: multilib.patch
+Patch1: libxslt-1.1.26-utf8-docs.patch
+%rename xsltproc
+%rename %{old_libxslt}
+%rename %{old_libexslt}
 
 %description
 This C library allows to transform XML files into other XML files
 (or HTML, text, ...) using the standard XSLT stylesheet transformation
-mechanism.
+mechanism. To use it you need to have a version of libxml2 >= 2.6.27
+installed. The xsltproc command is a command line interface to the XSLT engine
 
-%package -n xsltproc
-Summary:	XSLT processor using libxslt
-Group:		System/Libraries
+%package devel
+Summary: Development files for %{name}
 
-%description -n xsltproc
-This package provides an XSLT processor based on the libxslt C library. 
-It allows to transform XML files into other XML files
-(or HTML, text, ...) using the standard XSLT stylesheet transformation
-mechanism. 
+Requires: libxslt = %{version}-%{release}
+Requires: libgcrypt-devel
+%rename %{old_libxslt_devel}
+%rename %{old_libexslt_devel}
 
-%package -n %{libname}
-Summary:	Library providing XSLT support
-Group:		System/Libraries
 
-%description  -n %{libname}
-This C library allows to transform XML files into other XML files
-(or HTML, text, ...) using the standard XSLT stylesheet transformation
-mechanism. 
-A xslt processor based on this library, named xsltproc, is provided by 
-the libxslt-proc package.
+%description devel
+The %{name}-devel package contains libraries and header files for
+developing applications that use %{name}.
 
-%package -n %{libename}
-Summary:	Library providing XSLT support
-Group:		System/Libraries
-Conflicts:	%{_lib}xslt1 < 1.1.26-7
+%package python
+Summary: Python bindings for the libxslt library
 
-%description  -n %{libename}
-This package contains the exslt shared library.
+Requires: libxslt = %{version}-%{release}
+Requires: libxml2-python
 
-%package -n python-%{name}
-Summary:	Python bindings for the libxslt library
-Group:		Development/Python
-Requires:	python >= %{py_ver}
-Requires:	python-libxml2
-
-%description -n python-%{name}
+%description python
 The libxslt-python package contains a module that permits applications
 written in the Python programming language to use the interface
 supplied by the libxslt library to apply XSLT transformations.
@@ -68,62 +59,74 @@ to load and save XML and HTML files. Direct access to XPath and
 the XSLT transformation context are possible to extend the XSLT language
 with XPath functions written in Python.
 
-%package -n %{devname}
-Summary:	Libraries, includes, etc. to develop XML and HTML applications
-Group:		Development/C
-Provides:	%{name}-devel = %{version}-%{release}
-Requires:	%{libname} = %{version}-%{release}
-Requires:	%{libename} = %{version}-%{release}
-
-%description -n %{devname}
-This C library allows to transform XML files into other XML files
-(or HTML, text, ...) using the standard XSLT stylesheet transformation
-mechanism. 
-
 %prep
 %setup -q
+%patch0 -p1
+%patch1 -p1 -b .utf8
+# Now fix up the timestamps of patched docs files
+# ChangeLog needs to be retouched before gzip as well
+# since timestamp affects output
+touch -r ChangeLog.utf8 ChangeLog
+gzip -9 ChangeLog
+touch -r ChangeLog.utf8 ChangeLog.gz
+touch -r NEWS.utf8 NEWS
 
-mkdir -p python/examples
-cp -a python/tests/*.{py,xml,xsl} python/examples
+chmod 644 python/tests/*
 
 %build
-%configure2_5x \
-	--disable-static
-%make
+%configure --disable-static
+make %{?_smp_mflags}
 
 %install
-%makeinstall_std
+make install DESTDIR=$RPM_BUILD_ROOT INSTALL="install -p"
+find $RPM_BUILD_ROOT -name '*.la' -exec rm -f {} ';'
 
-# remove unpackaged files
-rm -rf %{buildroot}%{_docdir}/%{name}-%{version} \
-	%{buildroot}%{_docdir}/%{name}-python-%{version}
+# multiarch crazyness on timestamp differences
+touch -m --reference=$RPM_BUILD_ROOT/%{_includedir}/libxslt/xslt.h $RPM_BUILD_ROOT/%{_bindir}/xslt-config
 
-%multiarch_binaries %{buildroot}%{_bindir}/xslt-config
+rm -rf $RPM_BUILD_ROOT%{_datadir}/doc/%{name}{,-python}-%{version}
 
-%files -n xsltproc
-%doc AUTHORS NEWS README Copyright FEATURES TODO
+%check
+make tests
+
+%post -p /sbin/ldconfig
+
+%postun -p /sbin/ldconfig
+
+%files
+%defattr(-, root, root,-)
+%doc AUTHORS ChangeLog.gz NEWS README Copyright FEATURES
+%doc %{_mandir}/man1/xsltproc.1*
+%{_libdir}/lib*.so.*
+%{_libdir}/libxslt-plugins
 %{_bindir}/xsltproc
-%{_mandir}/man1/*
 
-%files -n %{libname}
-%{_libdir}/libxslt.so.%{major}*
-
-%files -n %{libename}
-%{_libdir}/libexslt.so.%{exslt_major}*
-
-%files -n python-%{name}
-%doc AUTHORS README Copyright FEATURES python/TODO python/examples python/libxsltclass.txt
-%{py_platsitedir}/*.so
-%{py_platsitedir}/*.py
-
-%files -n %{devname}
-%doc doc/*.html doc/tutorial doc/html
+%files devel
+%defattr(-, root, root,-)
+%doc doc/libxslt-api.xml
+%doc doc/libxslt-refs.xml
+%doc doc/EXSLT/libexslt-api.xml
+%doc doc/EXSLT/libexslt-refs.xml
+%doc %{_mandir}/man3/libxslt.3*
+%doc %{_mandir}/man3/libexslt.3*
+%doc doc/*.html doc/html doc/*.gif doc/*.png
+%doc doc/images
+%doc doc/tutorial
+%doc doc/tutorial2
+%doc doc/EXSLT
 %{_libdir}/lib*.so
 %{_libdir}/*.sh
-%{_libdir}/pkgconfig/*
+%{_datadir}/aclocal/libxslt.m4
 %{_includedir}/*
-%{multiarch_bindir}/xslt-config
 %{_bindir}/xslt-config
-%{_datadir}/aclocal/*
-%{_mandir}/man3/*
+%{_libdir}/pkgconfig/libxslt.pc
+%{_libdir}/pkgconfig/libexslt.pc
 
+%files python
+%defattr(-, root, root,-)
+%{python_sitearch}/libxslt.py*
+%{python_sitearch}/libxsltmod*
+%doc python/libxsltclass.txt
+%doc python/tests/*.py
+%doc python/tests/*.xml
+%doc python/tests/*.xsl
