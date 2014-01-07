@@ -1,10 +1,12 @@
 %define major 1
+%define emajor 0
 %define libname %mklibname xslt %{major}
+%define libename %mklibname exslt %{emajor}
 %define develname %mklibname xslt -d
 
 Name:		libxslt
 Version:	1.1.28
-Release:	11
+Release:	12
 Summary:	Library providing XSLT support
 License:	MIT
 Group:		System/Libraries
@@ -47,6 +49,13 @@ mechanism.
 A xslt processor based on this library, named xsltproc, is provided by
 the libxslt-proc package.
 
+%package -n	%{libename}
+Summary:	Library providing EXSLT support
+Group:		System/Libraries
+
+%description  -n %{libename}
+This C library adds EXSLT extensions to libxslt.
+
 %package -n	python-%{name}
 Summary:	Python bindings for the libxslt library
 Group:		Development/Python
@@ -70,6 +79,7 @@ Summary: Libraries, includes, etc. to develop XML and HTML applications
 Group: Development/C
 Provides: %{name}-devel = %{version}-%{release}
 Requires: %{libname} = %{version}-%{release}
+Requires: %{libename} = %{version}-%{release}
 Requires: libxml2-devel
 Obsoletes: %{mklibname xslt 1 -d} < %{version}-%{release}
 
@@ -101,7 +111,6 @@ make check
 
 # remove unpackaged files
 %{__rm} -rf %{buildroot}%{_docdir}/%{name}-%{version} %{buildroot}%{_docdir}/%{name}-python-%{version}
-find %{buildroot} -name '*.la' -delete
 
 %multiarch_binaries %{buildroot}%{_bindir}/xslt-config
 
@@ -111,7 +120,10 @@ find %{buildroot} -name '*.la' -delete
 
 %files -n %{libname}
 %doc AUTHORS NEWS README Copyright FEATURES TODO
-%{_libdir}/lib*.so.*
+%{_libdir}/libxslt.so.%{major}*
+
+%files -n %{libename}
+%{_libdir}/libexslt.so.%{emajor}*
 
 %files -n python-%{name}
 %defattr(0644,root, root,0755)
