@@ -6,7 +6,7 @@
 
 Name:		libxslt
 Version:	1.1.28
-Release:	13
+Release:	14
 Summary:	Library providing XSLT support
 License:	MIT
 Group:		System/Libraries
@@ -17,8 +17,10 @@ Source1:	autogen.sh
 Patch0:		multilib.patch	
 Patch1:		libxslt-1.1.26-utf8-docs.patch	
 Patch2:		libxslt-aarch64.patch
+Patch3:		libxslt-1.1.28-detect-python3.patch
+Patch4:		libxslt-1.1.28-python3.patch
 BuildRequires:	pkgconfig(libxml-2.0)
-BuildRequires:	python-devel
+BuildRequires:	pkgconfig(python3)
 BuildRequires:	python-libxml2
 BuildRequires:	pkgconfig(libgcrypt)
 
