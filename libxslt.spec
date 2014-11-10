@@ -6,7 +6,7 @@
 
 Name:		libxslt
 Version:	1.1.28
-Release:	15
+Release:	16
 Summary:	Library providing XSLT support
 License:	MIT
 Group:		System/Libraries
@@ -102,7 +102,7 @@ chmod 755 autogen.sh
 
 %build
 NOCONFIGURE=yes ./autogen.sh
-%configure2_5x --disable-static
+%configure --disable-static
 %make
 
 %check
