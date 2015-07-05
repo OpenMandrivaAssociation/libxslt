@@ -6,7 +6,7 @@
 
 Name:		libxslt
 Version:	1.1.28
-Release:	17
+Release:	18
 Summary:	Library providing XSLT support
 License:	MIT
 Group:		System/Libraries
