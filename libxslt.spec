@@ -6,7 +6,7 @@
 
 Name:		libxslt
 Version:	1.1.28
-Release:	22
+Release:	23
 Summary:	Library providing XSLT support
 License:	MIT
 Group:		System/Libraries
@@ -114,8 +114,6 @@ make check
 # remove unpackaged files
 %{__rm} -rf %{buildroot}%{_docdir}/%{name}-%{version} %{buildroot}%{_docdir}/%{name}-python-%{version}
 
-%multiarch_binaries %{buildroot}%{_bindir}/xslt-config
-
 %files -n xsltproc
 %{_bindir}/xsltproc
 %{_mandir}/man1/*
@@ -139,7 +137,6 @@ make check
 %{_libdir}/lib*.so
 %{_libdir}/*.sh
 %{_includedir}/*
-%{multiarch_bindir}/xslt-config
 %{_bindir}/xslt-config
 %{_libdir}/pkgconfig/*
 %{_datadir}/aclocal/*
