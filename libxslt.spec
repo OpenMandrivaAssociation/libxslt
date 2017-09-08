@@ -5,8 +5,8 @@
 %define develname %mklibname xslt -d
 
 Name:		libxslt
-Version:	1.1.28
-Release:	22
+Version:	1.1.30
+Release:	1
 Summary:	Library providing XSLT support
 License:	MIT
 Group:		System/Libraries
@@ -14,9 +14,8 @@ URL:		http://xmlsoft.org/XSLT/
 Source0:	ftp://xmlsoft.org/libxslt/libxslt-%{version}.tar.gz
 # S1 was taken from libxslt-1.1.26
 Source1:	autogen.sh
-Patch0:		multilib.patch	
-Patch1:		libxslt-1.1.26-utf8-docs.patch	
-Patch2:		libxslt-aarch64.patch
+Patch0:		multilib.patch
+Patch1:		libxslt-1.1.26-utf8-docs.patch
 Patch3:		libxslt-1.1.28-detect-python3.patch
 Patch4:		libxslt-1.1.28-python3.patch
 BuildRequires:	pkgconfig(libxml-2.0)
