@@ -5,7 +5,7 @@
 %define develname %mklibname xslt -d
 
 Name:		libxslt
-Version:	1.1.30
+Version:	1.1.31
 Release:	1
 Summary:	Library providing XSLT support
 License:	MIT
