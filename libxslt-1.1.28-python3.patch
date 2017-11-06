@@ -1,5 +1,5 @@
---- libxslt-1.1.28/python/generator.py.0004~	2012-09-04 16:26:23.000000000 +0200
-+++ libxslt-1.1.28/python/generator.py	2014-07-05 15:43:02.299358427 +0200
+--- libxslt-1.1.32/python/generator.py.0004~	2015-05-10 16:11:30.000000000 +0200
++++ libxslt-1.1.32/python/generator.py	2017-11-06 02:21:54.520043182 +0100
 @@ -6,8 +6,17 @@
  functions = {}
  enums = {} # { enumType: { enumConstant: enumValue } }
@@ -1229,8 +1229,8 @@
  
      txt.close()
      classes.close()
---- libxslt-1.1.28/python/libxml_wrap.h.0004~	2009-05-12 08:29:34.000000000 +0200
-+++ libxslt-1.1.28/python/libxml_wrap.h	2014-07-05 15:42:34.137710496 +0200
+--- libxslt-1.1.32/python/libxml_wrap.h.0004~	2009-05-12 08:29:34.000000000 +0200
++++ libxslt-1.1.32/python/libxml_wrap.h	2017-11-06 02:21:54.524043194 +0100
 @@ -14,6 +14,51 @@
  #include <libxml/HTMLtree.h>
  #include <libxml/xinclude.h>
@@ -1458,9 +1458,9 @@
 +PyObject * libxml_xmlRegisterInputCallback(PyObject *self, PyObject *args);
 +PyObject * libxml_xmlUnregisterInputCallback(PyObject *self, PyObject *args);
 +PyObject * libxml_xmlNodeRemoveNsDef(PyObject * self, PyObject * args);
---- libxslt-1.1.28/python/libxslt.c.0004~	2012-09-12 07:58:38.000000000 +0200
-+++ libxslt-1.1.28/python/libxslt.c	2014-07-05 15:42:34.137710496 +0200
-@@ -55,8 +55,8 @@ libxslt_xsltStylesheetPtrWrap(xsltStyles
+--- libxslt-1.1.32/python/libxslt.c.0004~	2017-10-30 08:49:55.000000000 +0100
++++ libxslt-1.1.32/python/libxslt.c	2017-11-06 02:23:57.752382020 +0100
+@@ -56,8 +56,8 @@ libxslt_xsltStylesheetPtrWrap(xsltStyles
  	Py_INCREF(Py_None);
  	return(Py_None);
      }
@@ -1471,7 +1471,7 @@
  
      return(ret);
  }
-@@ -72,8 +72,8 @@ libxslt_xsltTransformContextPtrWrap(xslt
+@@ -73,8 +73,8 @@ libxslt_xsltTransformContextPtrWrap(xslt
  	Py_INCREF(Py_None);
  	return(Py_None);
      }
@@ -1482,7 +1482,7 @@
      return(ret);
  }
  
-@@ -88,8 +88,8 @@ libxslt_xsltElemPreCompPtrWrap(xsltElemP
+@@ -89,8 +89,8 @@ libxslt_xsltElemPreCompPtrWrap(xsltElemP
  	Py_INCREF(Py_None);
  	return(Py_None);
      }
@@ -1493,25 +1493,25 @@
      return(ret);
  }
  
-@@ -107,7 +107,7 @@ libxslt_xsltGetTransformContextHashCode(
+@@ -108,7 +108,7 @@ libxslt_xsltGetTransformContextHashCode(
      tctxt =  (xsltTransformContextPtr) PytransformCtxt_Get(py_tctxt);
-     hash_code = (long) tctxt;
+     hash_code = (ptrdiff_t) tctxt;
  
 -    ret = PyInt_FromLong(hash_code);
 +    ret = PyLong_FromLong(hash_code);
      return ret;
  }
  
-@@ -144,7 +144,7 @@ libxslt_xsltGetStylesheetHashCode(PyObje
+@@ -145,7 +145,7 @@ libxslt_xsltGetStylesheetHashCode(PyObje
      style =  (xsltStylesheetPtr) Pystylesheet_Get(py_style);
-     hash_code = (long) style;
+     hash_code = (ptrdiff_t) style;
  
 -    ret = PyInt_FromLong(hash_code);
 +    ret = PyLong_FromLong(hash_code);
      return ret;
  }
  
-@@ -598,7 +598,7 @@ libxslt_xsltSetLoaderFunc(PyObject *self
+@@ -599,7 +599,7 @@ libxslt_xsltSetLoaderFunc(PyObject *self
      pythonDocLoaderObject = loader;
      xsltSetLoaderFunc(pythonDocLoaderFuncWrapper);
  
@@ -1520,7 +1520,7 @@
      return(py_retval);
  }
  
-@@ -691,12 +691,12 @@ libxslt_xsltApplyStylesheetUser(PyObject
+@@ -692,12 +692,12 @@ libxslt_xsltApplyStylesheetUser(PyObject
  		    const char *tmp;
  		    int size;
  
@@ -1538,7 +1538,7 @@
  			params[(j * 2) + 1] = (char *)
  			    xmlCharStrndup(tmp, size);
  		    } else {
-@@ -767,12 +767,12 @@ libxslt_xsltApplyStylesheet(PyObject *se
+@@ -768,12 +768,12 @@ libxslt_xsltApplyStylesheet(PyObject *se
  		    const char *tmp;
  		    int size;
  
@@ -1556,7 +1556,7 @@
  			params[(j * 2) + 1] = (char *)
  			    xmlCharStrndup(tmp, size);
  		    } else {
-@@ -837,11 +837,11 @@ libxslt_xsltSaveResultToString(PyObject
+@@ -838,11 +838,11 @@ libxslt_xsltSaveResultToString(PyObject
      if(size)
        {
        buffer[size] = '\0';
@@ -1570,7 +1570,7 @@
      return(py_retval);
   FAIL:
      return(0);
-@@ -1174,6 +1174,20 @@ static PyMethodDef libxsltMethods[] = {
+@@ -1175,6 +1175,20 @@ static PyMethodDef libxsltMethods[] = {
      { NULL, NULL, 0, NULL }
  };
  
@@ -1596,15 +1596,15 @@
      if (initialized != 0)
  	return;
 +#if PY_MAJOR_VERSION >= 3
-+    m = PyModule_Create(&moduledef);
++    PyModule_Create (&moduledef);
 +#else
-     m = Py_InitModule((char *)"libxsltmod", libxsltMethods);
+     Py_InitModule((char *)"libxsltmod", libxsltMethods);
 +#endif
      initialized = 1;
      /*
       * Specific XSLT initializations
---- libxslt-1.1.28/python/types.c.0004~	2012-09-12 07:58:15.000000000 +0200
-+++ libxslt-1.1.28/python/types.c	2014-07-05 15:42:34.137710496 +0200
+--- libxslt-1.1.32/python/types.c.0004~	2015-05-10 16:11:30.000000000 +0200
++++ libxslt-1.1.32/python/types.c	2017-11-06 02:21:54.526043200 +0100
 @@ -1,8 +1,4 @@
  /*
 -xmlParserInputPtr xmlNoNetExternalEntityLoader(const char *URL,
