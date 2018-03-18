@@ -6,7 +6,7 @@
 
 Name:		libxslt
 Version:	1.1.32
-Release:	1
+Release:	2
 Summary:	Library providing XSLT support
 License:	MIT
 Group:		System/Libraries
@@ -19,6 +19,7 @@ Patch1:		libxslt-1.1.26-utf8-docs.patch
 Patch3:		libxslt-1.1.28-detect-python3.patch
 Patch4:		libxslt-1.1.28-python3.patch
 BuildRequires:	pkgconfig(libxml-2.0)
+BuildRequires:	pkgconfig(icu-i18n)
 BuildRequires:	pkgconfig(python3)
 BuildRequires:	python-libxml2
 BuildRequires:	pkgconfig(libgcrypt)
@@ -91,7 +92,7 @@ mechanism.
 
 %prep
 %setup -q
-%apply_patches
+%autopatch -p1
 
 mkdir -p python/examples
 cp -a python/tests/*.{py,xml,xsl} python/examples
@@ -102,13 +103,13 @@ chmod 755 autogen.sh
 %build
 NOCONFIGURE=yes ./autogen.sh
 %configure --disable-static
-%make
+%make_build
 
 %check
 make check
 
 %install
-%makeinstall_std
+%make_install
 
 # remove unpackaged files
 rm -rf %{buildroot}%{_docdir}/%{name}-%{version} %{buildroot}%{_docdir}/%{name}-python-%{version}
