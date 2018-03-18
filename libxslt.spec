@@ -23,6 +23,7 @@ BuildRequires:	pkgconfig(icu-i18n)
 BuildRequires:	pkgconfig(python3)
 BuildRequires:	python-libxml2
 BuildRequires:	pkgconfig(libgcrypt)
+BuildRequires:	pkgconfig(gpg-error)
 
 %description
 This C library allows to transform XML files into other XML files
