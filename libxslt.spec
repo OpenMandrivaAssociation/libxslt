@@ -3,6 +3,7 @@
 %define libname %mklibname xslt %{major}
 %define libename %mklibname exslt %{emajor}
 %define develname %mklibname xslt -d
+%define _python_bytecompile_build 0
 
 Name:		libxslt
 Version:	1.1.32
