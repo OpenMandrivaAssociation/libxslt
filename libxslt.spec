@@ -3,16 +3,22 @@
 %define libname %mklibname xslt %{major}
 %define libename %mklibname exslt %{emajor}
 %define develname %mklibname xslt -d
+%define beta rc1
 %define _python_bytecompile_build 0
 
 Name:		libxslt
-Version:	1.1.32
-Release:	2
+Version:	1.1.33
+%if "%{beta}" != ""
+Release:	0.%{beta}.1
+Source0:	ftp://xmlsoft.org/libxslt/libxslt-%{version}-%{beta}.tar.gz
+%else
+Release:	1
+Source0:	ftp://xmlsoft.org/libxslt/libxslt-%{version}.tar.gz
+%endif
 Summary:	Library providing XSLT support
 License:	MIT
 Group:		System/Libraries
 URL:		http://xmlsoft.org/XSLT/
-Source0:	ftp://xmlsoft.org/libxslt/libxslt-%{version}.tar.gz
 # S1 was taken from libxslt-1.1.26
 Source1:	autogen.sh
 Patch0:		multilib.patch
@@ -93,8 +99,7 @@ This C library allows to transform XML files into other XML files
 mechanism.
 
 %prep
-%setup -q
-%autopatch -p1
+%autosetup -p1
 
 mkdir -p python/examples
 cp -a python/tests/*.{py,xml,xsl} python/examples
