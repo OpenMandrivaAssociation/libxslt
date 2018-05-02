@@ -31,6 +31,7 @@ BuildRequires:	pkgconfig(python3)
 BuildRequires:	python-libxml2
 BuildRequires:	pkgconfig(libgcrypt)
 BuildRequires:	pkgconfig(gpg-error)
+BuildRequires:	gettext-devel
 
 %description
 This C library allows to transform XML files into other XML files
