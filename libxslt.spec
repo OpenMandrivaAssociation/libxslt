@@ -12,7 +12,7 @@ Version:	1.1.33
 Release:	0.%{beta}.1
 Source0:	ftp://xmlsoft.org/libxslt/libxslt-%{version}-%{beta}.tar.gz
 %else
-Release:	1
+Release:	2
 Source0:	ftp://xmlsoft.org/libxslt/libxslt-%{version}.tar.gz
 %endif
 Summary:	Library providing XSLT support
