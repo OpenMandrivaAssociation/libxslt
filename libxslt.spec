@@ -7,7 +7,7 @@
 %define _python_bytecompile_build 0
 
 Name:		libxslt
-Version:	1.1.33
+Version:	1.1.34
 %if "%{beta}" != ""
 Release:	0.%{beta}.1
 Source0:	ftp://xmlsoft.org/libxslt/libxslt-%{version}-%{beta}.tar.gz
