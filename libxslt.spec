@@ -6,6 +6,9 @@
 %define beta %nil
 %define _python_bytecompile_build 0
 
+# (tpg) disable it as it is not ported to py3
+%bcond_with python
+
 Name:		libxslt
 Version:	1.1.34
 %if "%{beta}" != ""
@@ -23,12 +26,16 @@ URL:		http://xmlsoft.org/XSLT/
 Source1:	autogen.sh
 Patch0:		multilib.patch
 Patch1:		libxslt-1.1.26-utf8-docs.patch
+%if %{with python}
 Patch3:		libxslt-1.1.28-detect-python3.patch
 Patch4:		libxslt-1.1.28-python3.patch
+%endif
 BuildRequires:	pkgconfig(libxml-2.0)
 BuildRequires:	pkgconfig(icu-i18n)
+%if %{with python}
 BuildRequires:	pkgconfig(python3)
 BuildRequires:	python-libxml2
+%endif
 BuildRequires:	pkgconfig(libgcrypt)
 BuildRequires:	pkgconfig(gpg-error)
 BuildRequires:	gettext-devel
@@ -67,6 +74,7 @@ Group:		System/Libraries
 %description  -n %{libename}
 This C library adds EXSLT extensions to libxslt.
 
+%if %{with python}
 %package -n python-%{name}
 Summary:	Python bindings for the libxslt library
 Group:		Development/Python
@@ -84,6 +92,7 @@ This library allows to parse sytlesheets, uses the libxml2-python
 to load and save XML and HTML files. Direct access to XPath and
 the XSLT transformation context are possible to extend the XSLT language
 with XPath functions written in Python.
+%endif
 
 %package -n %{develname}
 Summary:	Libraries, includes, etc. to develop XML and HTML applications
@@ -91,7 +100,7 @@ Group:		Development/C
 Provides:	%{name}-devel = %{version}-%{release}
 Requires:	%{libname} = %{version}-%{release}
 Requires:	%{libename} = %{version}-%{release}
-Requires:	libxml2-devel
+Requires:	pkgconfig(libxml-2.0)
 Obsoletes:	%{mklibname xslt 1 -d} < %{version}-%{release}
 
 %description -n %{develname}
@@ -110,7 +119,7 @@ chmod 755 autogen.sh
 
 %build
 NOCONFIGURE=yes ./autogen.sh
-%configure --disable-static
+%configure --disable-static %{?_with_python}
 %make_build
 
 %check
@@ -136,11 +145,13 @@ rm -rf %{buildroot}%{_docdir}/%{name}-%{version} %{buildroot}%{_docdir}/%{name}-
 %files -n %{libename}
 %{_libdir}/libexslt.so.%{emajor}*
 
+%if %{with python}
 %files -n python-%{name}
 %defattr(0644,root, root,0755)
 %doc AUTHORS README Copyright FEATURES python/TODO python/examples python/libxsltclass.txt
 %{py_platsitedir}/*.so
 %{py_platsitedir}/*.py*
+%endif
 
 %files -n %{develname}
 %doc doc/*.html doc/tutorial doc/html
