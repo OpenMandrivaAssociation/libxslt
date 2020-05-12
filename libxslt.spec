@@ -128,7 +128,7 @@ Group:		Development/C
 Requires:	%{lib32name} = %{version}-%{release}
 Requires:	%{lib32ename} = %{version}-%{release}
 Requires:	%{develname} = %{EVRD}
-Requires:	devel(libxml)
+Requires:	devel(libxml2)
 
 %description -n %{devel32name}
 This C library allows to transform XML files into other XML files
