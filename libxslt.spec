@@ -53,6 +53,7 @@ BuildRequires:	gettext-devel
 %if %{with compat32}
 BuildRequires:	devel(libgcrypt)
 BuildRequires:	devel(libgpg-error)
+BuildRequires:	devel(libxml2)
 %endif
 
 %description
