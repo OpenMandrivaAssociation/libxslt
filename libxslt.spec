@@ -6,6 +6,17 @@
 %define beta %nil
 %define _python_bytecompile_build 0
 
+# libxslt is used by wine as well as some
+# other libraries wine depends on
+%ifarch %{x86_64}
+%bcond_without compat32
+%else
+%bcond_with compat32
+%endif
+%define lib32name libxslt%{major}
+%define lib32ename libexslt%{emajor}
+%define devel32name libxslt-devel
+
 # (tpg) disable it as it is not ported to py3
 %bcond_with python
 
@@ -15,7 +26,7 @@ Version:	1.1.34
 Release:	0.%{beta}.1
 Source0:	ftp://xmlsoft.org/libxslt/libxslt-%{version}-%{beta}.tar.gz
 %else
-Release:	1
+Release:	2
 Source0:	ftp://xmlsoft.org/libxslt/libxslt-%{version}.tar.gz
 %endif
 Summary:	Library providing XSLT support
@@ -39,6 +50,10 @@ BuildRequires:	python-libxml2
 BuildRequires:	pkgconfig(libgcrypt)
 BuildRequires:	pkgconfig(gpg-error)
 BuildRequires:	gettext-devel
+%if %{with compat32}
+BuildRequires:	devel(libgcrypt)
+BuildRequires:	devel(libgpg-error)
+%endif
 
 %description
 This C library allows to transform XML files into other XML files
@@ -74,6 +89,52 @@ Group:		System/Libraries
 %description  -n %{libename}
 This C library adds EXSLT extensions to libxslt.
 
+%package -n %{develname}
+Summary:	Libraries, includes, etc. to develop XML and HTML applications
+Group:		Development/C
+Requires:	%{libname} = %{version}-%{release}
+Requires:	%{libename} = %{version}-%{release}
+Requires:	pkgconfig(libxml-2.0)
+Obsoletes:	%{mklibname xslt 1 -d} < %{version}-%{release}
+
+%description -n %{develname}
+This C library allows to transform XML files into other XML files
+(or HTML, text, ...) using the standard XSLT stylesheet transformation
+mechanism.
+
+%if %{with compat32}
+%package -n %{lib32name}
+Summary:	Library providing XSLT support (32-bit)
+Group:		System/Libraries
+
+%description  -n %{lib32name}
+This C library allows to transform XML files into other XML files
+(or HTML, text, ...) using the standard XSLT stylesheet transformation
+mechanism.
+A xslt processor based on this library, named xsltproc, is provided by
+the libxslt-proc package.
+
+%package -n %{lib32ename}
+Summary:	Library providing EXSLT support (32-bit)
+Group:		System/Libraries
+
+%description  -n %{lib32ename}
+This C library adds EXSLT extensions to libxslt.
+
+%package -n %{devel32name}
+Summary:	Libraries, includes, etc. to develop XML and HTML applications (32-bit)
+Group:		Development/C
+Requires:	%{lib32name} = %{version}-%{release}
+Requires:	%{lib32ename} = %{version}-%{release}
+Requires:	%{develname} = %{EVRD}
+Requires:	devel(libxml)
+
+%description -n %{devel32name}
+This C library allows to transform XML files into other XML files
+(or HTML, text, ...) using the standard XSLT stylesheet transformation
+mechanism.
+%endif
+
 %if %{with python}
 %package -n python-%{name}
 Summary:	Python bindings for the libxslt library
@@ -94,20 +155,6 @@ the XSLT transformation context are possible to extend the XSLT language
 with XPath functions written in Python.
 %endif
 
-%package -n %{develname}
-Summary:	Libraries, includes, etc. to develop XML and HTML applications
-Group:		Development/C
-Provides:	%{name}-devel = %{version}-%{release}
-Requires:	%{libname} = %{version}-%{release}
-Requires:	%{libename} = %{version}-%{release}
-Requires:	pkgconfig(libxml-2.0)
-Obsoletes:	%{mklibname xslt 1 -d} < %{version}-%{release}
-
-%description -n %{develname}
-This C library allows to transform XML files into other XML files
-(or HTML, text, ...) using the standard XSLT stylesheet transformation
-mechanism.
-
 %prep
 %autosetup -p1
 
@@ -116,24 +163,39 @@ cp -a python/tests/*.{py,xml,xsl} python/examples
 
 cp %{SOURCE1} autogen.sh
 chmod 755 autogen.sh
+NOCONFIGURE=yes ./autogen.sh
+
+export CONFIGURE_TOP="`pwd`"
+%if %{with compat32}
+mkdir build32
+cd build32
+%configure32 --without-python
+cd ..
+%endif
+mkdir build
+cd build
+%configure %{?_with_python}
 
 %build
-NOCONFIGURE=yes ./autogen.sh
-%configure --disable-static %{?_with_python}
-%make_build
+%if %{with compat32}
+%make_build -C build32
+%endif
+%make_build -C build
 
 %check
-make check
+%if %{with compat32}
+make check -C build32
+%endif
+make check -C build
 
 %install
-%make_install
+%if %{with compat32}
+%make_install -C build32
+%endif
+%make_install -C build
 
 # remove unpackaged files
 rm -rf %{buildroot}%{_docdir}/%{name}-%{version} %{buildroot}%{_docdir}/%{name}-python-%{version}
-
-%if %{mdvver} <= 3000000
-%multiarch_binaries %{buildroot}%{_bindir}/xslt-config
-%endif
 
 %files -n xsltproc
 %{_bindir}/xsltproc
@@ -159,9 +221,19 @@ rm -rf %{buildroot}%{_docdir}/%{name}-%{version} %{buildroot}%{_docdir}/%{name}-
 %{_libdir}/lib*.so
 %{_libdir}/*.sh
 %{_includedir}/*
-%if %{mdvver} <= 3000000
-%{multiarch_bindir}/xslt-config
-%endif
 %{_bindir}/xslt-config
 %{_libdir}/pkgconfig/*
 %{_datadir}/aclocal/*
+
+%if %{with compat32}
+%files -n %{lib32name}
+%{_prefix}/lib/libxslt.so.%{major}*
+
+%files -n %{lib32ename}
+%{_prefix}/lib/libexslt.so.%{emajor}*
+
+%files -n %{devel32name}
+%{_prefix}/lib/*.so
+%{_prefix}/lib/*.sh
+%{_prefix}/lib/pkgconfig/*.pc
+%endif
