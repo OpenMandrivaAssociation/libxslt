@@ -26,7 +26,7 @@ Version:	1.1.34
 Release:	0.%{beta}.1
 Source0:	ftp://xmlsoft.org/libxslt/libxslt-%{version}-%{beta}.tar.gz
 %else
-Release:	2
+Release:	3
 Source0:	ftp://xmlsoft.org/libxslt/libxslt-%{version}.tar.gz
 %endif
 Summary:	Library providing XSLT support
@@ -184,9 +184,6 @@ cd build
 %make_build -C build
 
 %check
-%if %{with compat32}
-make check -C build32
-%endif
 make check -C build
 
 %install
