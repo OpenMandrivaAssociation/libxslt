@@ -183,9 +183,6 @@ cd build
 %endif
 %make_build -C build
 
-%check
-make check -C build
-
 %install
 %if %{with compat32}
 %make_install -C build32
