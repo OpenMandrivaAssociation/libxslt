@@ -17,17 +17,17 @@
 %define lib32ename libexslt%{emajor}
 %define devel32name libxslt-devel
 
-# (tpg) disable it as it is not ported to py3
-%bcond_with python
+%bcond_without python
 
 Name:		libxslt
-Version:	1.1.34
+Version:	1.1.35
 %if "%{beta}" != ""
 Release:	0.%{beta}.1
 Source0:	ftp://xmlsoft.org/libxslt/libxslt-%{version}-%{beta}.tar.gz
 %else
-Release:	3
-Source0:	ftp://xmlsoft.org/libxslt/libxslt-%{version}.tar.gz
+Release:	1
+Source0:  https://download.gnome.org/sources/libxslt/1.1/%{name}-%{version}.tar.xz
+#Source0:	ftp://xmlsoft.org/libxslt/libxslt-%{version}.tar.gz
 %endif
 Summary:	Library providing XSLT support
 License:	MIT
@@ -37,10 +37,7 @@ URL:		http://xmlsoft.org/XSLT/
 Source1:	autogen.sh
 Patch0:		multilib.patch
 Patch1:		libxslt-1.1.26-utf8-docs.patch
-%if %{with python}
-Patch3:		libxslt-1.1.28-detect-python3.patch
-Patch4:		libxslt-1.1.28-python3.patch
-%endif
+
 BuildRequires:	pkgconfig(libxml-2.0)
 BuildRequires:	pkgconfig(icu-i18n)
 %if %{with python}
@@ -205,13 +202,14 @@ rm -rf %{buildroot}%{_docdir}/%{name}-%{version} %{buildroot}%{_docdir}/%{name}-
 %if %{with python}
 %files -n python-%{name}
 %defattr(0644,root, root,0755)
-%doc AUTHORS README Copyright FEATURES python/TODO python/examples python/libxsltclass.txt
+%doc AUTHORS README Copyright FEATURES python/examples
 %{py_platsitedir}/*.so
 %{py_platsitedir}/*.py*
 %endif
 
 %files -n %{develname}
-%doc doc/*.html doc/tutorial doc/html
+%doc doc/*.html doc/tutorial doc/html 
+%doc %{_datadir}/gtk-doc/
 %{_mandir}/man3/*
 %{_libdir}/lib*.so
 %{_libdir}/*.sh
@@ -219,6 +217,9 @@ rm -rf %{buildroot}%{_docdir}/%{name}-%{version} %{buildroot}%{_docdir}/%{name}-
 %{_bindir}/xslt-config
 %{_libdir}/pkgconfig/*
 %{_datadir}/aclocal/*
+%{_libdir}/cmake/libxslt/FindGcrypt.cmake
+%{_libdir}/cmake/libxslt/libxslt-config.cmake
+
 
 %if %{with compat32}
 %files -n %{lib32name}
@@ -231,4 +232,7 @@ rm -rf %{buildroot}%{_docdir}/%{name}-%{version} %{buildroot}%{_docdir}/%{name}-
 %{_prefix}/lib/*.so
 %{_prefix}/lib/*.sh
 %{_prefix}/lib/pkgconfig/*.pc
+%{_prefix}/lib/cmake/libxslt/FindGcrypt.cmake
+%{_prefix}/lib/cmake/libxslt/libxslt-config.cmake
+
 %endif
