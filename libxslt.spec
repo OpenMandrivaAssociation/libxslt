@@ -37,10 +37,7 @@ URL:		http://xmlsoft.org/XSLT/
 Source1:	autogen.sh
 Patch0:		multilib.patch
 Patch1:		libxslt-1.1.26-utf8-docs.patch
-%if %{with python}
-Patch3:		libxslt-1.1.28-detect-python3.patch
-Patch4:		libxslt-1.1.28-python3.patch
-%endif
+
 BuildRequires:	pkgconfig(libxml-2.0)
 BuildRequires:	pkgconfig(icu-i18n)
 %if %{with python}
