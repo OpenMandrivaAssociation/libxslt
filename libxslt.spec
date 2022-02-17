@@ -208,7 +208,7 @@ rm -rf %{buildroot}%{_docdir}/%{name}-%{version} %{buildroot}%{_docdir}/%{name}-
 %endif
 
 %files -n %{develname}
-%doc doc/*.html doc/tutorial doc/html
+%doc doc/*.html doc/tutorial doc/html %{_datadir}/gtk-doc/html/libexslt/
 %{_mandir}/man3/*
 %{_libdir}/lib*.so
 %{_libdir}/*.sh
@@ -216,6 +216,9 @@ rm -rf %{buildroot}%{_docdir}/%{name}-%{version} %{buildroot}%{_docdir}/%{name}-
 %{_bindir}/xslt-config
 %{_libdir}/pkgconfig/*
 %{_datadir}/aclocal/*
+%{_libdir}/cmake/libxslt/FindGcrypt.cmake
+%{_libdir}/cmake/libxslt/libxslt-config.cmake
+
 
 %if %{with compat32}
 %files -n %{lib32name}
@@ -228,4 +231,7 @@ rm -rf %{buildroot}%{_docdir}/%{name}-%{version} %{buildroot}%{_docdir}/%{name}-
 %{_prefix}/lib/*.so
 %{_prefix}/lib/*.sh
 %{_prefix}/lib/pkgconfig/*.pc
+%{_prefix}/lib/cmake/libxslt/FindGcrypt.cmake
+%{_prefix}/lib/cmake/libxslt/libxslt-config.cmake
+
 %endif
