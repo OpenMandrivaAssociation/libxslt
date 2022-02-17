@@ -21,13 +21,14 @@
 %bcond_with python
 
 Name:		libxslt
-Version:	1.1.34
+Version:	1.1.35
 %if "%{beta}" != ""
 Release:	0.%{beta}.1
 Source0:	ftp://xmlsoft.org/libxslt/libxslt-%{version}-%{beta}.tar.gz
 %else
-Release:	3
-Source0:	ftp://xmlsoft.org/libxslt/libxslt-%{version}.tar.gz
+Release:	1
+Source0:  https://download.gnome.org/sources/libxslt/1.1/%{name}-%{version}.tar.xz
+#Source0:	ftp://xmlsoft.org/libxslt/libxslt-%{version}.tar.gz
 %endif
 Summary:	Library providing XSLT support
 License:	MIT
