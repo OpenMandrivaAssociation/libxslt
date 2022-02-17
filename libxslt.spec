@@ -202,7 +202,7 @@ rm -rf %{buildroot}%{_docdir}/%{name}-%{version} %{buildroot}%{_docdir}/%{name}-
 %if %{with python}
 %files -n python-%{name}
 %defattr(0644,root, root,0755)
-%doc AUTHORS README Copyright FEATURES python/TODO python/examples python/libxsltclass.txt
+%doc AUTHORS README Copyright FEATURES python/examples
 %{py_platsitedir}/*.so
 %{py_platsitedir}/*.py*
 %endif
