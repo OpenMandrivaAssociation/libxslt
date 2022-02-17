@@ -17,8 +17,7 @@
 %define lib32ename libexslt%{emajor}
 %define devel32name libxslt-devel
 
-# (tpg) disable it as it is not ported to py3
-%bcond_with python
+%bcond_without python
 
 Name:		libxslt
 Version:	1.1.35
