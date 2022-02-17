@@ -209,7 +209,7 @@ rm -rf %{buildroot}%{_docdir}/%{name}-%{version} %{buildroot}%{_docdir}/%{name}-
 
 %files -n %{develname}
 %doc doc/*.html doc/tutorial doc/html 
-%doc %{_datadir}/gtk-doc/html/libexslt/
+%doc %{_datadir}/gtk-doc/
 %{_mandir}/man3/*
 %{_libdir}/lib*.so
 %{_libdir}/*.sh
