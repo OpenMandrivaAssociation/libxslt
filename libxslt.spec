@@ -20,7 +20,7 @@
 %bcond_without python
 
 Name:		libxslt
-Version:	1.1.35
+Version:	1.1.37
 %if "%{beta}" != ""
 Release:	0.%{beta}.1
 Source0:	ftp://xmlsoft.org/libxslt/libxslt-%{version}-%{beta}.tar.gz
@@ -36,7 +36,7 @@ URL:		http://xmlsoft.org/XSLT/
 # S1 was taken from libxslt-1.1.26
 Source1:	autogen.sh
 Patch0:		multilib.patch
-Patch1:		libxslt-1.1.26-utf8-docs.patch
+#Patch1:		libxslt-1.1.26-utf8-docs.patch
 
 BuildRequires:	pkgconfig(libxml-2.0)
 BuildRequires:	pkgconfig(icu-i18n)
@@ -204,11 +204,12 @@ rm -rf %{buildroot}%{_docdir}/%{name}-%{version} %{buildroot}%{_docdir}/%{name}-
 %defattr(0644,root, root,0755)
 %doc AUTHORS README Copyright FEATURES python/examples
 %{py_platsitedir}/*.so
-%{py_platsitedir}/*.py*
+%{python_sitelib}/__pycache__/libxslt.cpython*
+%{python_sitelib}/libxslt.py
 %endif
 
 %files -n %{develname}
-%doc doc/*.html doc/tutorial doc/html 
+%doc %{_datadir}/doc/libxslt/
 %doc %{_datadir}/gtk-doc/
 %{_mandir}/man3/*
 %{_libdir}/lib*.so
