@@ -36,7 +36,7 @@ URL:		http://xmlsoft.org/XSLT/
 # S1 was taken from libxslt-1.1.26
 Source1:	autogen.sh
 Patch0:		multilib.patch
-Patch1:		libxslt-1.1.26-utf8-docs.patch
+#Patch1:		libxslt-1.1.26-utf8-docs.patch
 
 BuildRequires:	pkgconfig(libxml-2.0)
 BuildRequires:	pkgconfig(icu-i18n)
