@@ -204,7 +204,7 @@ rm -rf %{buildroot}%{_docdir}/%{name}-%{version} %{buildroot}%{_docdir}/%{name}-
 %defattr(0644,root, root,0755)
 %doc AUTHORS README Copyright FEATURES python/examples
 %{py_platsitedir}/*.so
-%{py_platsitedir}/*.py*
+#{py_platsitedir}/*.py*
 %endif
 
 %files -n %{develname}
