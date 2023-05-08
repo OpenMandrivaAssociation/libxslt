@@ -25,7 +25,7 @@ Version:	1.1.38
 Release:	0.%{beta}.1
 Source0:	ftp://xmlsoft.org/libxslt/libxslt-%{version}-%{beta}.tar.gz
 %else
-Release:	2
+Release:	1
 Source0:  https://download.gnome.org/sources/libxslt/1.1/%{name}-%{version}.tar.xz
 #Source0:	ftp://xmlsoft.org/libxslt/libxslt-%{version}.tar.gz
 %endif
@@ -202,7 +202,7 @@ rm -rf %{buildroot}%{_docdir}/%{name}-%{version} %{buildroot}%{_docdir}/%{name}-
 %if %{with python}
 %files -n python-%{name}
 %defattr(0644,root, root,0755)
-%doc AUTHORS README Copyright FEATURES python/examples
+%doc AUTHORS README* Copyright FEATURES python/examples
 %{py_platsitedir}/*.so
 %{python_sitelib}/__pycache__/libxslt.cpython*
 %{python_sitelib}/libxslt.py
