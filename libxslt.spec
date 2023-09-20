@@ -25,14 +25,14 @@ Version:	1.1.38
 Release:	0.%{beta}.1
 Source0:	ftp://xmlsoft.org/libxslt/libxslt-%{version}-%{beta}.tar.gz
 %else
-Release:	1
+Release:	2
 Source0:  https://download.gnome.org/sources/libxslt/1.1/%{name}-%{version}.tar.xz
 #Source0:	ftp://xmlsoft.org/libxslt/libxslt-%{version}.tar.gz
 %endif
 Summary:	Library providing XSLT support
 License:	MIT
 Group:		System/Libraries
-URL:		http://xmlsoft.org/XSLT/
+URL:		https://xmlsoft.org/XSLT/
 # S1 was taken from libxslt-1.1.26
 Source1:	autogen.sh
 Patch0:		multilib.patch
