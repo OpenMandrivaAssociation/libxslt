@@ -1,3 +1,5 @@
+%global build_ldflags %{build_ldflags} -Wl,--undefined-version
+
 %define major 1
 %define emajor 0
 %define libname %mklibname xslt %{major}
