@@ -25,7 +25,7 @@
 %bcond_without python
 
 Name:		libxslt
-Version:	1.1.40
+Version:	1.1.41
 %if "%{beta}" != ""
 Release:	0.%{beta}.1
 Source0:	ftp://xmlsoft.org/libxslt/libxslt-%{version}-%{beta}.tar.gz
