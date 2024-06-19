@@ -222,7 +222,7 @@ rm -rf %{buildroot}%{_docdir}/%{name}-%{version} %{buildroot}%{_docdir}/%{name}-
 %{_includedir}/*
 %{_bindir}/xslt-config
 %{_libdir}/pkgconfig/*
-%{_datadir}/aclocal/*
+#{_datadir}/aclocal/*
 %{_libdir}/cmake/libxslt/FindGcrypt.cmake
 %{_libdir}/cmake/libxslt/libxslt-config.cmake
 
