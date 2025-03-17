@@ -25,12 +25,12 @@
 %bcond_without python
 
 Name:		libxslt
-Version:	1.1.42
+Version:	1.1.43
 %if "%{beta}" != ""
 Release:	0.%{beta}.1
 Source0:	ftp://xmlsoft.org/libxslt/libxslt-%{version}-%{beta}.tar.gz
 %else
-Release:	2
+Release:	1
 Source0:  https://download.gnome.org/sources/libxslt/1.1/%{name}-%{version}.tar.xz
 #Source0:	ftp://xmlsoft.org/libxslt/libxslt-%{version}.tar.gz
 %endif
