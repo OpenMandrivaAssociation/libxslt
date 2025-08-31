@@ -22,33 +22,42 @@
 %define lib32ename libexslt%{emajor}
 %define devel32name libxslt-devel
 
-%bcond_without python
+%bcond_without python 
 
 Name:		libxslt
 Version:	1.1.43
+
 %if "%{beta}" != ""
 Release:	0.%{beta}.1
 Source0:	ftp://xmlsoft.org/libxslt/libxslt-%{version}-%{beta}.tar.gz
 %else
-Release:	1
+Release:	2
 Source0:  https://download.gnome.org/sources/libxslt/1.1/%{name}-%{version}.tar.xz
-#Source0:	ftp://xmlsoft.org/libxslt/libxslt-%{version}.tar.gz
 %endif
+
 Summary:	Library providing XSLT support
 License:	MIT
 Group:		System/Libraries
-URL:		https://xmlsoft.org/XSLT/
-# S1 was taken from libxslt-1.1.26
-Source1:	autogen.sh
-Patch0:		multilib.patch
-#Patch1:		libxslt-1.1.26-utf8-docs.patch
+URL:		https://gitlab.gnome.org/GNOME/libxslt
+
+BuildSystem:    cmake
+BuildOption:    -DLIBXSLT_WITH_DEBUGGER=ON
+%if %{with python}
+BuildRequires:	pkgconfig(python)
+BuildRequires:	python-libxml2
+%if %{with compat32}
+BuildRequires:  libpython-devel
+BuildOption:    -DPython_LIBRARIES="/usr/lib/python%{python3_version}"
+BuildOption:    -DPython_EXECUTABLE="%{_bindir}/python"
+BuildOption:    -DPython_INCLUDE_DIRS="%{_includedir}/python%{python3_version}"
+%endif
+%else
+BuildOption:    -DLIBXSLT_WITH_PYTHON=OFF
+%endif
+BuildOption:    -DLIBSXLT_WITH_CRYPTO=ON
 
 BuildRequires:	pkgconfig(libxml-2.0)
 BuildRequires:	pkgconfig(icu-i18n)
-%if %{with python}
-BuildRequires:	pkgconfig(python3)
-BuildRequires:	python-libxml2
-%endif
 BuildRequires:	pkgconfig(libgcrypt)
 BuildRequires:	pkgconfig(gpg-error)
 BuildRequires:	gettext-devel
@@ -158,42 +167,6 @@ the XSLT transformation context are possible to extend the XSLT language
 with XPath functions written in Python.
 %endif
 
-%prep
-%autosetup -p1
-
-mkdir -p python/examples
-cp -a python/tests/*.{py,xml,xsl} python/examples
-
-cp %{SOURCE1} autogen.sh
-chmod 755 autogen.sh
-NOCONFIGURE=yes ./autogen.sh
-
-export CONFIGURE_TOP="`pwd`"
-%if %{with compat32}
-mkdir build32
-cd build32
-%configure32 --without-python
-cd ..
-%endif
-mkdir build
-cd build
-%configure %{?_with_python}
-
-%build
-%if %{with compat32}
-%make_build -C build32
-%endif
-%make_build -C build
-
-%install
-%if %{with compat32}
-%make_install -C build32
-%endif
-%make_install -C build
-
-# remove unpackaged files
-rm -rf %{buildroot}%{_docdir}/%{name}-%{version} %{buildroot}%{_docdir}/%{name}-python-%{version}
-
 %files -n xsltproc
 %{_bindir}/xsltproc
 %{_mandir}/man1/*
@@ -207,24 +180,20 @@ rm -rf %{buildroot}%{_docdir}/%{name}-%{version} %{buildroot}%{_docdir}/%{name}-
 %if %{with python}
 %files -n python-%{name}
 %defattr(0644,root, root,0755)
-%doc AUTHORS README* Copyright FEATURES python/examples
-%{py_platsitedir}/*.so
-%{python_sitelib}/__pycache__/libxslt.cpython*
-%{python_sitelib}/libxslt.py
+%{_prefix}/lib/debug/usr/python/*.debug
+%{_prefix}/python/%name.py
+%{_prefix}/python/%{name}mod.*
 %endif
 
 %files -n %{develname}
 %doc %{_datadir}/doc/libxslt/
-%doc %{_datadir}/gtk-doc/
 %{_mandir}/man3/*
 %{_libdir}/lib*.so
 %{_libdir}/*.sh
 %{_includedir}/*
 %{_bindir}/xslt-config
 %{_libdir}/pkgconfig/*
-#{_datadir}/aclocal/*
-%{_libdir}/cmake/libxslt/FindGcrypt.cmake
-%{_libdir}/cmake/libxslt/libxslt-config.cmake
+%{_libdir}/cmake/libxslt-%version/*.cmake
 
 
 %if %{with compat32}
@@ -238,7 +207,6 @@ rm -rf %{buildroot}%{_docdir}/%{name}-%{version} %{buildroot}%{_docdir}/%{name}-
 %{_prefix}/lib/*.so
 %{_prefix}/lib/*.sh
 %{_prefix}/lib/pkgconfig/*.pc
-%{_prefix}/lib/cmake/libxslt/FindGcrypt.cmake
-%{_prefix}/lib/cmake/libxslt/libxslt-config.cmake
+%{_prefix}/lib/cmake/libxslt-%version/*.cmake
 
 %endif
