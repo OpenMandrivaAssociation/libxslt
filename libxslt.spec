@@ -5,8 +5,10 @@
 
 %define major 1
 %define emajor 0
-%define libname %mklibname xslt %{major}
-%define libename %mklibname exslt %{emajor}
+%define oldlibname %mklibname xslt 1
+%define oldlibename %mklibname exslt 0
+%define libname %mklibname xslt
+%define libename %mklibname exslt
 %define develname %mklibname xslt -d
 %define beta %nil
 %define _python_bytecompile_build 0
@@ -18,8 +20,10 @@
 %else
 %bcond_with compat32
 %endif
-%define lib32name libxslt%{major}
-%define lib32ename libexslt%{emajor}
+%define oldlib32name libxslt1
+%define oldlib32ename libexslt0
+%define lib32name libxslt
+%define lib32ename libexslt
 %define devel32name libxslt-devel
 
 %bcond_without python 
@@ -32,7 +36,7 @@ Release:	0.%{beta}.1
 Source0:	ftp://xmlsoft.org/libxslt/libxslt-%{version}-%{beta}.tar.gz
 %else
 Release:	2
-Source0:  https://download.gnome.org/sources/libxslt/1.1/%{name}-%{version}.tar.xz
+Source0:	https://download.gnome.org/sources/libxslt/1.1/%{name}-%{version}.tar.xz
 %endif
 
 Summary:	Library providing XSLT support
@@ -86,6 +90,8 @@ mechanism.
 %package -n %{libname}
 Summary:	Library providing XSLT support
 Group:		System/Libraries
+# Renamed after 6.0 2025-09-24
+%rename %{oldlibname}
 
 %description  -n %{libname}
 This C library allows to transform XML files into other XML files
@@ -97,6 +103,8 @@ the libxslt-proc package.
 %package -n %{libename}
 Summary:	Library providing EXSLT support
 Group:		System/Libraries
+# Renamed after 6.0 2025-09-24
+%rename %{oldlibename}
 
 %description  -n %{libename}
 This C library adds EXSLT extensions to libxslt.
@@ -115,9 +123,11 @@ This C library allows to transform XML files into other XML files
 mechanism.
 
 %if %{with compat32}
+%if "%{name}" != "%{lib32name}"
 %package -n %{lib32name}
 Summary:	Library providing XSLT support (32-bit)
 Group:		System/Libraries
+%rename %{olblib32name}
 
 %description  -n %{lib32name}
 This C library allows to transform XML files into other XML files
@@ -125,10 +135,12 @@ This C library allows to transform XML files into other XML files
 mechanism.
 A xslt processor based on this library, named xsltproc, is provided by
 the libxslt-proc package.
+%endif
 
 %package -n %{lib32ename}
 Summary:	Library providing EXSLT support (32-bit)
 Group:		System/Libraries
+%rename %{oldlib32ename}
 
 %description  -n %{lib32ename}
 This C library adds EXSLT extensions to libxslt.
