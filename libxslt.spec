@@ -29,7 +29,7 @@
 %bcond_without python 
 
 Name:		libxslt
-Version:	1.1.43
+Version:	1.1.45
 
 %if "%{beta}" != ""
 Release:	0.%{beta}.1
