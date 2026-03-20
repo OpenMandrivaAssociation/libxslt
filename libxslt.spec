@@ -49,13 +49,8 @@ BuildOption:    -DLIBXSLT_WITH_DEBUGGER=ON
 %if %{with python}
 BuildRequires:	pkgconfig(python)
 BuildRequires:	python-libxml2 >= 2.15.2
-%if %{with compat32}
-BuildRequires:  libpython-devel
-BuildOption:    -DPython_LIBRARIES="/usr/lib/python%{python3_version}"
-BuildOption:    -DPython_EXECUTABLE="%{_bindir}/python"
-BuildOption:    -DPython_INCLUDE_DIRS="%{_includedir}/python%{python3_version}"
 %endif
-%else
+%if %{with compat32}
 BuildOption:    -DLIBXSLT_WITH_PYTHON=OFF
 %endif
 BuildOption:    -DLIBSXLT_WITH_CRYPTO=ON
