@@ -56,6 +56,7 @@ BuildOption:    -DLIBXSLT_WITH_PYTHON=OFF
 BuildOption:    -DLIBSXLT_WITH_CRYPTO=ON
 
 BuildRequires:	pkgconfig(libxml-2.0) >= 2.15.2
+BuildRequires:  libxml2-utils >= 2.15.2
 BuildRequires:	pkgconfig(icu-i18n)
 BuildRequires:	pkgconfig(libgcrypt)
 BuildRequires:	pkgconfig(gpg-error)
@@ -187,9 +188,9 @@ with XPath functions written in Python.
 %if %{with python}
 %files -n python-%{name}
 %defattr(0644,root, root,0755)
-%{_prefix}/lib/debug/usr/python/*.debug
-%{_prefix}/python/%name.py
-%{_prefix}/python/%{name}mod.*
+#{_prefix}/lib/debug/usr/python/*.debug
+#{_prefix}/python/%name.py
+#{_prefix}/python/%{name}mod.*
 %endif
 
 %files -n %{develname}
