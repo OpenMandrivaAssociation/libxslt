@@ -35,7 +35,7 @@ Version:	1.1.45
 Release:	0.%{beta}.1
 Source0:	ftp://xmlsoft.org/libxslt/libxslt-%{version}-%{beta}.tar.gz
 %else
-Release:	2
+Release:	3
 Source0:	https://download.gnome.org/sources/libxslt/1.1/%{name}-%{version}.tar.xz
 %endif
 
@@ -48,7 +48,7 @@ BuildSystem:    cmake
 BuildOption:    -DLIBXSLT_WITH_DEBUGGER=ON
 %if %{with python}
 BuildRequires:	pkgconfig(python)
-BuildRequires:	python-libxml2
+BuildRequires:	python-libxml2 >= 2.15.2
 %if %{with compat32}
 BuildRequires:  libpython-devel
 BuildOption:    -DPython_LIBRARIES="/usr/lib/python%{python3_version}"
@@ -60,7 +60,7 @@ BuildOption:    -DLIBXSLT_WITH_PYTHON=OFF
 %endif
 BuildOption:    -DLIBSXLT_WITH_CRYPTO=ON
 
-BuildRequires:	pkgconfig(libxml-2.0)
+BuildRequires:	pkgconfig(libxml-2.0) >= 2.15.2
 BuildRequires:	pkgconfig(icu-i18n)
 BuildRequires:	pkgconfig(libgcrypt)
 BuildRequires:	pkgconfig(gpg-error)
@@ -68,7 +68,7 @@ BuildRequires:	gettext-devel
 %if %{with compat32}
 BuildRequires:	devel(libgcrypt)
 BuildRequires:	devel(libgpg-error)
-BuildRequires:	devel(libxml2)
+BuildRequires:	devel(libxml2) >= 2.15.2
 %endif
 
 %description
