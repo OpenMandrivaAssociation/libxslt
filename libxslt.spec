@@ -46,6 +46,7 @@ URL:		https://gitlab.gnome.org/GNOME/libxslt
 
 BuildSystem:    cmake
 BuildOption:    -DLIBXSLT_WITH_DEBUGGER=ON
+BuildOption:    -DLIBXSLT_WITH_PYTHON=ON
 %if %{with python}
 BuildRequires:	pkgconfig(python)
 BuildRequires:	python-libxml2 >= 2.15.2
