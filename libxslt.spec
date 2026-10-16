@@ -48,6 +48,9 @@ BuildSystem:    cmake
 BuildOption:    -DLIBXSLT_WITH_DEBUGGER=ON
 BuildOption:    -DLIBXSLT_WITH_PYTHON=ON
 %if %{with python}
+# Upstream leaves this pointed at /usr/python. The sitearch line in
+# CMakeLists.txt is commented out.
+BuildOption:    -DLIBXSLT_PYTHON_INSTALL_DIR=%{py_platsitedir}
 BuildRequires:	pkgconfig(python)
 BuildRequires:	python-libxml2 >= 2.15.2
 %endif
@@ -195,10 +198,8 @@ with XPath functions written in Python.
 
 %if %{with python}
 %files -n python-%{name}
-%defattr(0644,root, root,0755)
-#{_prefix}/lib/debug/usr/python/*.debug
-#{_prefix}/python/%name.py
-#{_prefix}/python/%{name}mod.*
+%{py_platsitedir}/libxslt.py
+%{py_platsitedir}/libxsltmod.so*
 %endif
 
 %files -n %{develname}
