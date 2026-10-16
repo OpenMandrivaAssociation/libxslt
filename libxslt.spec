@@ -66,6 +66,13 @@ BuildRequires:	gettext-devel
 BuildRequires:	devel(libgcrypt)
 BuildRequires:	devel(libgpg-error)
 BuildRequires:	devel(libxml2) >= 2.15.2
+# clang -m32 reads i386-*.cfg. The i686-openmandriva target has
+# libclang_rt.builtins.a and the sysroot lld needs.
+BuildRequires:	cross-i686-openmandriva-linux-gnu-clang
+BuildRequires:	cross-i686-openmandriva-linux-gnu-libc
+BuildRequires:	cross-i686-openmandriva-linux-gnu-gcc
+BuildRequires:	cross-i686-openmandriva-linux-gnu-binutils
+BuildRequires:	cross-i686-openmandriva-linux-gnu-kernel-headers
 %endif
 
 %description
