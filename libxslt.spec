@@ -45,19 +45,10 @@ Group:		System/Libraries
 URL:		https://gitlab.gnome.org/GNOME/libxslt
 
 BuildSystem:    cmake
-BuildOption:    -DLIBXSLT_WITH_DEBUGGER=ON
-BuildOption:    -DLIBXSLT_WITH_PYTHON=ON
 %if %{with python}
-# Upstream leaves this pointed at /usr/python. The sitearch line in
-# CMakeLists.txt is commented out.
-BuildOption:    -DLIBXSLT_PYTHON_INSTALL_DIR=%{py_platsitedir}
 BuildRequires:	pkgconfig(python)
 BuildRequires:	python-libxml2 >= 2.15.2
 %endif
-%if %{with compat32}
-BuildOption:    -DLIBXSLT_WITH_PYTHON=OFF
-%endif
-BuildOption:    -DLIBSXLT_WITH_CRYPTO=ON
 
 BuildRequires:	pkgconfig(libxml-2.0) >= 2.15.2
 BuildRequires:  libxml2-utils >= 2.15.2
@@ -184,6 +175,31 @@ This library allows to parse sytlesheets, uses the libxml2-python
 to load and save XML and HTML files. Direct access to XPath and
 the XSLT transformation context are possible to extend the XSLT language
 with XPath functions written in Python.
+%endif
+
+# A BuildOption is passed to both cmake runs. The last -D wins, so
+# PYTHON=OFF on the compat32 pass also disabled the native bindings.
+%conf
+CMAKE_BUILD_DIR=_OMV_rpm_build
+%cmake \
+	-G Ninja \
+	-DLIBXSLT_WITH_DEBUGGER=ON \
+%if %{with python}
+	-DLIBXSLT_WITH_PYTHON=ON \
+	-DLIBXSLT_PYTHON_INSTALL_DIR=%{py_platsitedir} \
+%else
+	-DLIBXSLT_WITH_PYTHON=OFF \
+%endif
+	-DLIBSXLT_WITH_CRYPTO=ON
+cd ..
+%if %{with compat32}
+CMAKE_BUILD_DIR32=_OMV_rpm_build32
+%cmake32 \
+	-G Ninja \
+	-DLIBXSLT_WITH_DEBUGGER=ON \
+	-DLIBXSLT_WITH_PYTHON=OFF \
+	-DLIBSXLT_WITH_CRYPTO=ON
+cd ..
 %endif
 
 %files -n xsltproc
